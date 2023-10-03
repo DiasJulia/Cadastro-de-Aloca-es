@@ -5,7 +5,7 @@ import express = require("express");
 import operacaoRouter from "./routes/OperacaoRoutes";
 
 const app: Application = express();
-const port = 8080;
+const port = 3000;
 
 app.use(express.json());
 
@@ -14,7 +14,7 @@ app.get("/api/ping", (req: Request, res: Response) => {
   res.json({ message: "Pong!" });
 });
 
-app.use(operacaoRouter);
+app.use("/api/operacao", operacaoRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
