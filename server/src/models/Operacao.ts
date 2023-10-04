@@ -12,7 +12,7 @@ export class Operacao {
   razao_social: string;
 
   @Column()
-  tipo: number;
+  tipo: string;
 
   @Column()
   data: Date;
