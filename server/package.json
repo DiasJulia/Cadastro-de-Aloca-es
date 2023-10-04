@@ -24,6 +24,7 @@
    "scripts": {
       "start": "ts-node src/index.ts",
       "test": "jest",
+      "test-and-start": "npm test && npm start",
       "typeorm": "typeorm-ts-node-commonjs"
    }
 }
