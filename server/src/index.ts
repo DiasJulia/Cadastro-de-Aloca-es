@@ -16,12 +16,19 @@ app.get("/api/ping", (req: Request, res: Response) => {
 
 app.use("/api/operacao", operacaoRouter);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+async function startServer() {
+  try {
+    await AppDataSource.initialize(); // Inicializa o banco de dados
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Failed to initialize the database:", error);
+  }
+}
 
-AppDataSource.initialize()
-  .then(async () => {})
-  .catch((error) => console.log(error));
+if (require.main === module) {
+  startServer(); // Executado apenas quando o arquivo é executado diretamente
+}
 
 export { app };
