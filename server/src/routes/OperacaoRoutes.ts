@@ -9,6 +9,8 @@ operacaoRouter
   .post(operacaoController.create)
   .get(operacaoController.readAll);
 
+operacaoRouter.route("/grouped").get(operacaoController.readAllGroupedByCNPJ);
+
 operacaoRouter.route("/:CNPJ").get(operacaoController.readByCNPJ);
 
 operacaoRouter

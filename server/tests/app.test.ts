@@ -59,6 +59,36 @@ describe("OperacaoController", () => {
     }
   });
 
+  it("should read all operations grouped by CNPJ", async () => {
+    const setupReq = mockRequest({
+      CNPJ: "123456789",
+      razao_social: "Sample Company",
+      tipo: 1,
+      data: "2023-10-03",
+      quantidade: 100,
+      valor: 500.0,
+    });
+    const setupRes = await request(app)
+      .post("/api/operacao")
+      .send(setupReq.body);
+    expect(setupRes.status).toBe(201);
+    const setupRes2 = await request(app)
+      .post("/api/operacao")
+      .send(setupReq.body);
+    expect(setupRes2.status).toBe(201);
+
+    const res = await request(app).get("/api/operacao/grouped");
+    expect(res.status).toBe(200);
+    //expect body to be a dict
+    if (res.body.length > 0) {
+      expect(res.body).toHaveProperty("123456789");
+      expect(res.body).toHaveProperty("123456789.razao_social");
+      expect(res.body).toHaveProperty("123456789.preco_total");
+      expect(res.body).toHaveProperty("123456789.quantidade_total");
+      expect(res.body).toHaveProperty("123456789.valor_unitario_atual");
+    }
+  });
+
   it("should update an operation", async () => {
     const setupReq = mockRequest({
       CNPJ: "123456789",

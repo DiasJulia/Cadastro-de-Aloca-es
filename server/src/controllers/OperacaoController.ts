@@ -33,6 +33,36 @@ class OperacaoController {
     }
   }
 
+  async readAllGroupedByCNPJ(req: Request, res: Response) {
+    try {
+      const operacoes = await AppDataSource.manager.find(Operacao);
+      const operacoesGrouped = operacoes.reduce((acc, operacao) => {
+        if (!acc[operacao.CNPJ]) {
+          acc[operacao.CNPJ] = {};
+          acc[operacao.CNPJ].CNPJ = operacao.CNPJ;
+          acc[operacao.CNPJ].razao_social = operacao.razao_social;
+          acc[operacao.CNPJ].preco_total = 0;
+          acc[operacao.CNPJ].quantidade_total = 0;
+          acc[operacao.CNPJ].valor_unitario_atual = 1.2;
+        }
+        if (operacao.tipo === "COMPRA") {
+          acc[operacao.CNPJ].quantidade_total += operacao.quantidade;
+          acc[operacao.CNPJ].preco_total +=
+            operacao.valor * operacao.quantidade;
+        } else if (operacao.tipo === "VENDA") {
+          acc[operacao.CNPJ].quantidade_total -= operacao.quantidade;
+          acc[operacao.CNPJ].preco_total -=
+            operacao.valor * operacao.quantidade;
+        }
+        return acc;
+      }, {});
+      res.json(operacoesGrouped);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   async readByCNPJ(req: Request, res: Response) {
     try {
       const { CNPJ } = req.params;

@@ -34,6 +34,16 @@ const operacaoPaths = {
       },
     },
   },
+  "/operacao/grouped": {
+    get: {
+      tags: ["Operação"],
+      summary:
+        "Lista resumo de todas as operações por fundo de investimento (CNPJ)",
+      responses: {
+        ...operacaoResponse.readAllGroupedByCNPJ,
+      },
+    },
+  },
   "/operacao/{id}": {
     put: {
       tags: ["Operação"],
