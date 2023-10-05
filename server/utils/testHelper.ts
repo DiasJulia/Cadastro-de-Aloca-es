@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 
-import { AppDataSource } from "../src/data-source";
+import { TestDataSource } from "../src/test-data-source";
 
 export class TestHelper {
   private static _instance: TestHelper;
@@ -15,8 +15,15 @@ export class TestHelper {
 
   private dbConnect!: DataSource;
   async setupTestDB() {
-    this.dbConnect = AppDataSource;
-    await this.dbConnect.initialize();
+    try {
+      this.dbConnect = TestDataSource;
+      await this.dbConnect.initialize();
+      console.log(`In memory Db initialized`);
+    } catch (err) {
+      console.error(
+        `dbConnectionManager - error initializing db. Error: ${err.message}`
+      );
+    }
   }
 
   teardownTestDB() {
