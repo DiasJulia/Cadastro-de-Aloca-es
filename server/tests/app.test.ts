@@ -17,6 +17,13 @@ const mockRequest = (body: any = {}) => {
   };
 };
 
+const mockCreate = async (body: any = {}) => {
+  const req = mockRequest(body);
+  const res = await request(app).post("/api/operacao").send(req.body);
+  expect(res.status).toBe(201);
+  return res;
+};
+
 describe("API Endpoints", () => {
   it("should ping", async () => {
     const res = await request(app).get("/api/ping");
@@ -30,10 +37,10 @@ describe("OperacaoController", () => {
     const req = mockRequest({
       CNPJ: "123456789",
       razao_social: "Sample Company",
-      tipo: 1,
+      tipo: "COMPRA",
       data: "2023-10-03",
-      quantidade: 100,
-      valor: 500.0,
+      quantidade: 1,
+      valor: 1.04,
     });
     const res = await request(app).post("/api/operacao").send(req.body);
     expect(res.status).toBe(201);
@@ -60,32 +67,33 @@ describe("OperacaoController", () => {
   });
 
   it("should read all operations grouped by CNPJ", async () => {
-    const setupReq = mockRequest({
-      CNPJ: "123456789",
-      razao_social: "Sample Company",
-      tipo: 1,
+    await mockCreate({
+      CNPJ: "11.511.517/0001-61",
+      razao_social: "Fundo exemplo",
+      tipo: "COMPRA",
       data: "2023-10-03",
-      quantidade: 100,
-      valor: 500.0,
+      quantidade: 1,
+      valor: 1,
     });
-    const setupRes = await request(app)
-      .post("/api/operacao")
-      .send(setupReq.body);
-    expect(setupRes.status).toBe(201);
-    const setupRes2 = await request(app)
-      .post("/api/operacao")
-      .send(setupReq.body);
-    expect(setupRes2.status).toBe(201);
+    await mockCreate({
+      CNPJ: "11.511.517/0001-61",
+      razao_social: "Fundo exemplo",
+      tipo: "COMPRA",
+      data: "2023-10-03",
+      quantidade: 2,
+      valor: 1.04,
+    });
 
     const res = await request(app).get("/api/operacao/grouped");
     expect(res.status).toBe(200);
-    //expect body to be a dict
     if (res.body.length > 0) {
-      expect(res.body).toHaveProperty("123456789");
-      expect(res.body).toHaveProperty("123456789.razao_social");
-      expect(res.body).toHaveProperty("123456789.preco_total");
-      expect(res.body).toHaveProperty("123456789.quantidade_total");
-      expect(res.body).toHaveProperty("123456789.valor_unitario_atual");
+      expect(res.body).toHaveProperty("11.511.517/0001-61");
+      expect(res.body).toHaveProperty("11.511.517/0001-61.razao_social");
+      expect(res.body).toHaveProperty("11.511.517/0001-61.preco_total");
+      expect(res.body).toHaveProperty("11.511.517/0001-61.quantidade_total");
+      expect(res.body).toHaveProperty(
+        "11.511.517/0001-61.valor_unitario_atual"
+      );
     }
   });
 
