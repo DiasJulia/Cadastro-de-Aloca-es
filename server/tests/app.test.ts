@@ -86,15 +86,14 @@ describe("OperacaoController", () => {
 
     const res = await request(app).get("/api/operacao/grouped");
     expect(res.status).toBe(200);
-    if (res.body.length > 0) {
-      expect(res.body).toHaveProperty("11.511.517/0001-61");
-      expect(res.body).toHaveProperty("11.511.517/0001-61.razao_social");
-      expect(res.body).toHaveProperty("11.511.517/0001-61.preco_total");
-      expect(res.body).toHaveProperty("11.511.517/0001-61.quantidade_total");
-      expect(res.body).toHaveProperty(
-        "11.511.517/0001-61.valor_unitario_atual"
-      );
-    }
+    expect(res.body["11.511.517/0001-61"]).toHaveProperty("razao_social");
+    expect(res.body["11.511.517/0001-61"]).toHaveProperty("preco_total");
+    expect(res.body["11.511.517/0001-61"].preco_total).toBe(3.08);
+    expect(res.body["11.511.517/0001-61"]).toHaveProperty("quantidade_total");
+    expect(res.body["11.511.517/0001-61"].quantidade_total).toBe(3);
+    expect(res.body["11.511.517/0001-61"]).toHaveProperty(
+      "valor_unitario_atual"
+    );
   });
 
   it("should update an operation", async () => {
