@@ -11,4 +11,9 @@ operacaoRouter
 
 operacaoRouter.route("/:CNPJ").get(operacaoController.readByCNPJ);
 
+operacaoRouter
+  .route("/:id")
+  .put(operacaoController.update)
+  .delete(operacaoController.delete);
+
 export default operacaoRouter;
