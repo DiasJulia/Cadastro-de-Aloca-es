@@ -3,26 +3,27 @@ const operacaoSchemas = {
   properties: {
     id: {
       type: "integer",
-      example: 1,
     },
     CNPJ: {
       type: "string",
-      example: "12345678901234",
+    },
+    razao_social: {
+      type: "string",
     },
     data: {
       type: "string",
-      example: "2021-01-01",
     },
     valor: {
       type: "number",
-      example: 1000.0,
+    },
+    quantidade: {
+      type: "integer",
     },
     tipo: {
       type: "string",
-      example: "Compra",
     },
   },
-  required: ["CNPJ", "data", "valor", "tipo"],
+  required: ["CNPJ", "razao_social", "data", "valor", "quantidade", "tipo"],
 };
 
 export default operacaoSchemas;

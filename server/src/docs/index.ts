@@ -17,7 +17,9 @@ export default {
   paths: {
     ...operacaoPaths,
   },
-  schemas: {
-    ...operacaoSchemas,
+  components: {
+    schemas: {
+      operacao: operacaoSchemas,
+    },
   },
 };

@@ -11,6 +11,14 @@ const operacaoPaths = {
             schema: {
               $ref: "#/schemas/operacao",
             },
+            example: {
+              CNPJ: "12345678901234",
+              razao_social: "Empresa 1",
+              data: "2021-01-01",
+              valor: 1000,
+              quantidade: 10,
+              tipo: "COMPRA",
+            },
           },
         },
       },
@@ -47,6 +55,14 @@ const operacaoPaths = {
           "application/json": {
             schema: {
               $ref: "#/schemas/operacao",
+            },
+            example: {
+              CNPJ: "12345678901234",
+              razao_social: "Empresa 1",
+              data: "2021-01-01",
+              valor: 1000,
+              quantidade: 10,
+              tipo: "COMPRA",
             },
           },
         },
