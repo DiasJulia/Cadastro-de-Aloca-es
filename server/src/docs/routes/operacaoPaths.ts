@@ -26,6 +26,55 @@ const operacaoPaths = {
       },
     },
   },
+  "/operacao/{id}": {
+    put: {
+      tags: ["Operação"],
+      summary: "Atualiza uma operação",
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          description: "ID da operação",
+          required: true,
+          schema: {
+            type: "integer",
+            example: 1,
+          },
+        },
+      ],
+      requestBody: {
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/schemas/operacao",
+            },
+          },
+        },
+      },
+      responses: {
+        ...operacaoResponse.update,
+      },
+    },
+    delete: {
+      tags: ["Operação"],
+      summary: "Deleta uma operação",
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          description: "ID da operação",
+          required: true,
+          schema: {
+            type: "integer",
+            example: 1,
+          },
+        },
+      ],
+      responses: {
+        ...operacaoResponse.delete,
+      },
+    },
+  },
 };
 
 export default operacaoPaths;
