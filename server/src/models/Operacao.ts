@@ -20,6 +20,6 @@ export class Operacao {
   @Column()
   quantidade: number;
 
-  @Column()
+  @Column("float")
   valor: number;
 }
