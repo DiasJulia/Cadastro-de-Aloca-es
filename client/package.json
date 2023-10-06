@@ -17,6 +17,7 @@
     "axios": "^1.5.1",
     "next": "13.5.4",
     "react": "^18",
+    "react-currency-format": "^1.1.0",
     "react-dom": "^18"
   },
   "devDependencies": {
@@ -24,6 +25,7 @@
     "@testing-library/react": "^14.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-currency-format": "^1.0.1",
     "@types/react-dom": "^18",
     "cypress": "^13.3.0",
     "eslint": "^8",

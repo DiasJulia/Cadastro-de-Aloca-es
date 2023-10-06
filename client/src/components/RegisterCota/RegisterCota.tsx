@@ -8,14 +8,17 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import "./RegisterCota.css";
 import axios from "axios";
+import CurrencyFormat from "react-currency-format";
 
 function RegisterCota() {
   const [modalOpen, setModalOpen] = useState(false);
   const [tipo, setTipo] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [razaoSocial, setRazaoSocial] = useState("");
-  const [quantidade, setQuantidade] = useState(0);
-  const [valorUnitario, setValorUnitario] = useState(0);
+  const [quantidade, setQuantidade] = useState<Number | null>();
+  const [valorUnitario, setValorUnitario] = useState<Number | null>();
+  const [date, setDate] = useState(new Date(Date.now()));
+  const [inputValue, setInputValue] = useState("" as string);
 
   const openModal = () => {
     setModalOpen(true);
@@ -31,7 +34,7 @@ function RegisterCota() {
       tipo: tipo,
       CNPJ: cnpj,
       razao_social: razaoSocial,
-      data: new Date(Date.now()),
+      data: date,
       quantidade: quantidade,
       valor: valorUnitario,
     };
@@ -86,6 +89,7 @@ function RegisterCota() {
           ></TextField>
           <br />
           <TextField
+            type="number"
             id="input-quantidade"
             label="Quantidade"
             variant="outlined"
@@ -93,12 +97,30 @@ function RegisterCota() {
             onChange={(e) => setQuantidade(parseInt(e.target.value))}
           ></TextField>
           <br />
-          <TextField
-            id="input-valor-unitario"
+          <CurrencyFormat
+            customInput={TextField}
+            thousandSeparator="."
+            decimalSeparator=","
+            fixedDecimalScale={true}
+            prefix="R$"
+            decimalScale={2}
+            placeholder="R$ 0,00"
             label="Valor Unitário"
+            value={`R$ ${inputValue}`}
+            onValueChange={(values) => {
+              const { formattedValue, value } = values;
+              setInputValue(formattedValue);
+              setValorUnitario(parseFloat(value));
+            }}
+          />
+          <br />
+          <TextField
+            type="date"
+            id="input-data"
+            label="Data"
             variant="outlined"
-            value={valorUnitario}
-            onChange={(e) => setValorUnitario(parseInt(e.target.value))}
+            value={date.toISOString().split("T")[0]}
+            onChange={(e) => setDate(new Date(e.target.value))}
           ></TextField>
           <br />
           <div className="button-container">
