@@ -1,4 +1,5 @@
 import Table from "./Table/Table";
 import RegisterCota from "./RegisterCota/RegisterCota";
+import OperationTable from "./OperationTable/OperationTable";
 
-export { Table, RegisterCota };
+export { Table, RegisterCota, OperationTable };
