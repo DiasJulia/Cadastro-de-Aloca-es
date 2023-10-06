@@ -1,3 +1,4 @@
 import Table from "./Table/Table";
+import RegisterCota from "./RegisterCota/RegisterCota";
 
-export { Table };
+export { Table, RegisterCota };
