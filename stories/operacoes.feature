@@ -4,13 +4,15 @@ Feature: Gestão de alocações financeiras em fundos de investimento
     para que possa gerenciar as operações e saber o retorno sobre as alocações
 
 Scenario: Visualização de informações de operações e retorno sobre fundos
-Given há uma operação de "compra" de "2" cotas no valor de "1" real sobre fundo de CNPJ "123456" e razão social "FI"
+Given há uma operação de "COMPRA" de "1" cotas no valor de "1" real sobre fundo de CNPJ "11.511.517/0001-61" e razão social "Fundo exemplo"
 When eu consulto a página de listagem
-Then eu posso ver as informações sobre alocações em fundos e seu retorno
+Then eu posso ver as informações sobre o fundo de CNPJ "11.511.517/0001-61" e razão social "Fundo exemplo"
 
 Scenario: Registro de compra de cotas de um novo fundo
 
 Scenario: Registro de compra de cotas de um fundo que já possui operações registradas
+
+Scenario: Registro de compra de cotas de um fundo que já possui operações registradas com uma razão social diferente
 
 Scenario: Registro de venda de cotas de um fundo que possui cotas compradas
 
