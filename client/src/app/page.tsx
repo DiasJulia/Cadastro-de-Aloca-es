@@ -1,12 +1,12 @@
 import styles from "./page.module.css";
-import { OperationTable, RegisterCota, Table } from "@/components";
+import { Navbar, RegisterCota, Table } from "@/components";
 
 export default function Home() {
   return (
     <main className={styles.main}>
+      <Navbar />
       <Table />
       <RegisterCota />
-      <OperationTable />
     </main>
   );
 }
