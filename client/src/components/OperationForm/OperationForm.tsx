@@ -55,7 +55,17 @@ function OperationForm(props: any) {
   const handleNextStep = () => {
     if (step === 1) {
       if (tipo && cnpj && date) {
-        setStep(2);
+        console.log(date);
+        axios
+          .get(
+            `http://localhost:3001/api/consultaCVM?cnpj=${cnpj}&data=${date}`
+          )
+          .then((response) => {
+            console.log(response);
+            setValorUnitario(response.data.valor);
+            setInputValue(response.data.valor.toString().replace(".", ","));
+            setStep(2);
+          });
       }
     } else {
       if (step === 2) {
