@@ -5,6 +5,7 @@ import { AppDataSource } from "./data-source";
 import express = require("express");
 import cors from "cors";
 import operacaoRouter from "./routes/OperacaoRoutes";
+import { FetchData } from "../utils/fetchData";
 
 import swaggerDocument from "./docs";
 
@@ -29,6 +30,34 @@ app.get("/api/ping", (req: Request, res: Response) => {
 });
 
 app.use("/api/operacao", operacaoRouter);
+
+// Rota para baixar o arquivo CSV
+app.get("/api/fetch-data", async (req: Request, res: Response) => {
+  try {
+    const fetchData = new FetchData();
+    const zipData = await fetchData.downloadZipFile();
+    const csvContent = await fetchData.extractCSVFromZIP(zipData);
+
+    res.json(csvContent);
+  } catch (error) {
+    console.error("Ocorreu um erro:", error);
+    res.status(500).json({ message: "Ocorreu um erro." });
+  }
+});
+
+// Rota para encontrar o valor da cota com base no CNPJ e data
+app.get("/api/find-cota-value", async (req: Request, res: Response) => {
+  try {
+    const { cnpj, data } = req.query;
+    const fetchData = new FetchData();
+    const cotaValue = await fetchData.findCotaValue(cnpj, data);
+
+    res.json({ cotaValue });
+  } catch (error) {
+    console.error("Ocorreu um erro:", error);
+    res.status(500).json({ message: "Ocorreu um erro." });
+  }
+});
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
