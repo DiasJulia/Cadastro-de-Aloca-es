@@ -11,6 +11,7 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 
 interface Data {
+  id: number;
   CNPJ: string;
   razao_social: string;
   data: string;
@@ -20,6 +21,7 @@ interface Data {
 }
 
 function createData(
+  id: number,
   CNPJ: string,
   razao_social: string,
   data: string,
@@ -28,6 +30,7 @@ function createData(
   quantidade: number
 ) {
   return {
+    id,
     CNPJ,
     razao_social,
     data,
@@ -40,6 +43,7 @@ function createData(
 function OperationTable() {
   const [data, setData] = useState<Data[]>([
     createData(
+      1,
       "11.511.517/0001-61",
       "Empresa 1",
       "2023-10-03T00:00:00.000Z",
@@ -56,6 +60,17 @@ function OperationTable() {
     });
   }, []);
 
+  const editOperation = (id: number) => () => {};
+
+  const deleteOperation = (id: number) => () => {
+    axios
+      .delete(`http://localhost:3001/api/operacao/${id}`)
+      .then((response) => {
+        console.log(response.data);
+        setData(response.data);
+      });
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -64,14 +79,16 @@ function OperationTable() {
             <TableCell>CNPJ</TableCell>
             <TableCell align="right">Razão Social</TableCell>
             <TableCell align="right">Data da Operação</TableCell>
+            <TableCell align="right">Tipo</TableCell>
             <TableCell align="right">Preço</TableCell>
             <TableCell align="right">Número de cotas</TableCell>
+            <TableCell align="right">Ações</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {data.map((row) => (
             <TableRow
-              key={row.CNPJ}
+              key={row.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
@@ -81,8 +98,13 @@ function OperationTable() {
               <TableCell align="right">
                 {new Date(row.data).toLocaleDateString()}
               </TableCell>
+              <TableCell align="right">{row.tipo}</TableCell>
               <TableCell align="right">{row.valor}</TableCell>
               <TableCell align="right">{row.quantidade}</TableCell>
+              <TableCell align="right">
+                <button onClick={editOperation(row.id)}>Editar</button>
+                <button onClick={deleteOperation(row.id)}>Excluir</button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
