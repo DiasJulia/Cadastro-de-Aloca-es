@@ -11,14 +11,13 @@ class ApiController {
     this.fetchCSVDataByCNPJAndDate = this.fetchCSVDataByCNPJAndDate.bind(this);
   }
 
-  public async downloadZipFile(res: Response): Promise<Buffer> {
+  public async downloadZipFile(res: Response, data): Promise<Buffer> {
     try {
-      const response = await axios.get(
-        this.baseURL + "inf_diario_fi_202310.zip",
-        {
-          responseType: "arraybuffer",
-        }
-      );
+      const formattedDate = data.replace(/-/g, "").slice(0, 6); // Remova o dia da data
+      const zipFileURL = `${this.baseURL}inf_diario_fi_${formattedDate}.zip`;
+      const response = await axios.get(zipFileURL, {
+        responseType: "arraybuffer",
+      });
       return response.data;
     } catch (err) {
       res
@@ -69,7 +68,7 @@ class ApiController {
         });
         return;
       }
-      const zipData = await this.downloadZipFile(res);
+      const zipData = await this.downloadZipFile(res, data);
       const csvData = await this.extractCSVFromZIP(zipData, res);
       const cotaValue = this.searchCSVForCota(csvData, cnpj, data);
 
