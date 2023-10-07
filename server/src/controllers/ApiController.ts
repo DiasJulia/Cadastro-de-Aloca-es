@@ -11,7 +11,7 @@ class ApiController {
     this.fetchCSVDataByCNPJAndDate = this.fetchCSVDataByCNPJAndDate.bind(this);
   }
 
-  public async downloadZipFile(res: Response, data): Promise<Buffer> {
+  public async downloadZipFile(res: Response, data): Promise<Buffer | null> {
     try {
       const formattedDate = data.replace(/-/g, "").slice(0, 6); // Remova o dia da data
       const zipFileURL = `${this.baseURL}inf_diario_fi_${formattedDate}.zip`;
@@ -20,16 +20,14 @@ class ApiController {
       });
       return response.data;
     } catch (err) {
-      res
-        .status(404)
-        .json({ message: "Não foi possível encontrar o arquivo." });
+      return null;
     }
   }
 
   public async extractCSVFromZIP(
     zipData: Buffer,
     res: Response
-  ): Promise<string> {
+  ): Promise<string | null> {
     try {
       const zip = new JSZip();
       const zipContent = await zip.loadAsync(zipData);
@@ -41,9 +39,7 @@ class ApiController {
         }
       }
     } catch (err) {
-      res
-        .status(404)
-        .json({ message: "Não foi possível encontrar o arquivo." });
+      return null;
     }
   }
 
@@ -69,7 +65,19 @@ class ApiController {
         return;
       }
       const zipData = await this.downloadZipFile(res, data);
+      if (zipData === null) {
+        res.status(404).json({
+          message: "Não foi possível encontrar o arquivo zip.",
+        });
+        return;
+      }
       const csvData = await this.extractCSVFromZIP(zipData, res);
+      if (csvData === null) {
+        res.status(404).json({
+          message: "Não foi possível encontrar o arquivo CSV.",
+        });
+        return;
+      }
       const cotaValue = this.searchCSVForCota(csvData, cnpj, data);
 
       if (cotaValue === null) {
