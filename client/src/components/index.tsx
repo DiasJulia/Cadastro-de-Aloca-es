@@ -1,6 +1,7 @@
 import Table from "./Table/Table";
-import RegisterCota from "./RegisterCota/RegisterCota";
+import Button from "./Button/Button";
+import OperationForm from "./OperationForm/OperationForm";
 import OperationTable from "./OperationTable/OperationTable";
 import Navbar from "./Navbar/Navbar";
 
-export { Table, RegisterCota, OperationTable, Navbar };
+export { Table, Button, OperationTable, Navbar, OperationForm };
