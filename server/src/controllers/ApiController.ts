@@ -44,7 +44,6 @@ class ApiController {
   }
 
   public searchCSVForCota(csvData, cnpj, date): number | null {
-    console.log("searchCSVForCota", cnpj, date);
     const rows = csvData.split("\n");
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i].split(";");
@@ -88,7 +87,7 @@ class ApiController {
         return;
       }
 
-      res.json({ cotaValue });
+      res.json({ valor: cotaValue });
     } catch (error) {
       console.error("Ocorreu um erro:", error);
       res.status(500).json({ message: "Ocorreu um erro." });

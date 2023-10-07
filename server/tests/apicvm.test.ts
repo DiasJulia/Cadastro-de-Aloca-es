@@ -12,8 +12,8 @@ describe("Testes para a rota /api/consultaCVM", () => {
       .query({ cnpj: "00.017.024/0001-53", data: "2023-10-05" });
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("cotaValue");
-    expect(typeof response.body.cotaValue).toBe("number");
+    expect(response.body).toHaveProperty("valor");
+    expect(typeof response.body.valor).toBe("number");
   });
 
   it("Deve retornar status 400 para uma consulta sem CNPJ ou data", async () => {
