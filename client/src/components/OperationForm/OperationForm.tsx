@@ -27,6 +27,10 @@ function OperationForm(props: any) {
   );
   const [inputValue, setInputValue] = useState("" as string);
 
+  const [receivedCNPJ, setReceivedCNPJ] = useState<string | null>("");
+  const [receivedDate, setReceivedDate] = useState<string | null>("" as string);
+  const [receivedValue, setReceivedValue] = useState<Number | null>();
+
   const methods = useForm();
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTipo(event.target.value);
@@ -54,18 +58,24 @@ function OperationForm(props: any) {
 
   const handleNextStep = () => {
     if (step === 1) {
-      if (tipo && cnpj && date) {
-        console.log(date);
-        axios
-          .get(
-            `http://localhost:3001/api/consultaCVM?cnpj=${cnpj}&data=${date}`
-          )
-          .then((response) => {
-            console.log(response);
-            setValorUnitario(response.data.valor);
-            setInputValue(response.data.valor.toString().replace(".", ","));
-            setStep(2);
-          });
+      if (razaoSocial && cnpj && date) {
+        if (receivedCNPJ === cnpj && receivedDate === date) {
+          setStep(2);
+          return;
+        } else {
+          axios
+            .get(
+              `http://localhost:3001/api/consultaCVM?cnpj=${cnpj}&data=${date}`
+            )
+            .then((response) => {
+              setReceivedCNPJ(cnpj);
+              setReceivedDate(date);
+              setReceivedValue(response.data.valor);
+              setValorUnitario(response.data.valor);
+              setInputValue(response.data.valor.toString().replace(".", ","));
+              setStep(2);
+            });
+        }
       }
     } else {
       if (step === 2) {
@@ -87,26 +97,22 @@ function OperationForm(props: any) {
               <>
                 <TextField
                   required
-                  select
-                  error={tipo === null ? true : false}
-                  id="input-tipo"
-                  value={tipo}
-                  onChange={handleChange}
-                  label="Tipo"
-                  variant="outlined"
-                >
-                  <MenuItem value="COMPRA">Compra</MenuItem>
-                  <MenuItem value="VENDA">Venda</MenuItem>
-                </TextField>
-                <br />
-                <TextField
-                  required
                   error={cnpj === null ? true : false}
                   id="input-cnpj"
                   label="CNPJ"
                   variant="outlined"
                   value={cnpj}
                   onChange={(e) => setCnpj(e.target.value || null)}
+                ></TextField>
+                <br />
+                <TextField
+                  required
+                  error={razaoSocial === null ? true : false}
+                  id="input-razao-social"
+                  label="Razão Social"
+                  variant="outlined"
+                  value={razaoSocial}
+                  onChange={(e) => setRazaoSocial(e.target.value || null)}
                 ></TextField>
                 <br />
                 <TextField
@@ -153,13 +159,17 @@ function OperationForm(props: any) {
               <>
                 <TextField
                   required
-                  error={razaoSocial === null ? true : false}
-                  id="input-razao-social"
-                  label="Razão Social"
+                  select
+                  error={tipo === null ? true : false}
+                  id="input-tipo"
+                  value={tipo}
+                  onChange={handleChange}
+                  label="Tipo"
                   variant="outlined"
-                  value={razaoSocial}
-                  onChange={(e) => setRazaoSocial(e.target.value || null)}
-                ></TextField>
+                >
+                  <MenuItem value="COMPRA">Compra</MenuItem>
+                  <MenuItem value="VENDA">Venda</MenuItem>
+                </TextField>
                 <br />
                 <TextField
                   required
