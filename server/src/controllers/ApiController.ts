@@ -45,11 +45,20 @@ class ApiController {
 
   public searchCSVForCota(csvData, cnpj, date): number | null {
     const rows = csvData.split("\n");
+    let mostRecentDate = "1900-01-01";
+    let mostRecentCota = 0;
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i].split(";");
       if (row[1] === cnpj && row[2] === date) {
         return parseFloat(row[4]);
       }
+      if (row[1] === cnpj && row[2] > mostRecentDate && row[2] <= date) {
+        mostRecentDate = row[2];
+        mostRecentCota = parseFloat(row[4]);
+      }
+    }
+    if (mostRecentCota > 0) {
+      return mostRecentCota;
     }
     return null;
   }
