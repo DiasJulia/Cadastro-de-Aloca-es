@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Operacao } from "../models/Operacao";
 import { TestDataSource } from "../test-data-source";
 import { AppDataSource } from "../data-source";
+import { FetchData } from "../../utils/fetchData";
 
 class OperacaoController {
   private conection: any;
@@ -48,15 +49,16 @@ class OperacaoController {
 
   async readAllGroupedByCNPJ(req: Request, res: Response) {
     try {
+      const fetchData = new FetchData();
       const operacoes = await this.conection.manager.find(Operacao);
-      const operacoesGrouped = operacoes.reduce((acc, operacao) => {
+      let operacoesGrouped = operacoes.reduce((acc, operacao) => {
         if (!acc[operacao.CNPJ]) {
           acc[operacao.CNPJ] = {};
           acc[operacao.CNPJ].CNPJ = operacao.CNPJ;
           acc[operacao.CNPJ].razao_social = operacao.razao_social;
           acc[operacao.CNPJ].preco_total = 0;
           acc[operacao.CNPJ].quantidade_total = 0;
-          acc[operacao.CNPJ].valor_unitario_atual = 1.2;
+          acc[operacao.CNPJ].valor_unitario_atual = 0;
         }
         if (operacao.tipo === "COMPRA") {
           acc[operacao.CNPJ].quantidade_total += operacao.quantidade;
@@ -69,6 +71,12 @@ class OperacaoController {
         }
         return acc;
       }, {});
+      for (const cnpj in operacoesGrouped) {
+        const mostRecentCota = await fetchData.searchCSVForMostRecentCotaByCNPJ(
+          cnpj
+        );
+        operacoesGrouped[cnpj].valor_unitario_atual = mostRecentCota;
+      }
       res.json(operacoesGrouped);
     } catch (error) {
       console.error(error);

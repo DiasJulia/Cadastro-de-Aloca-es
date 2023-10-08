@@ -4,49 +4,43 @@ const fs = require("fs");
 const csv = require("csv-parser");
 
 export class FetchData {
-  // URL do arquivo ZIP
-  private zipFileURL =
-    "https://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/inf_diario_fi_202310.zip";
+  private baseURL = "https://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/";
+  constructor() {
+    this.downloadZipFile = this.downloadZipFile.bind(this);
+    this.extractCSVFromZIP = this.extractCSVFromZIP.bind(this);
+    this.searchCSVForCota = this.searchCSVForCota.bind(this);
+  }
 
-  async findCotaValue(cnpj, date): Promise<number> {
-    const zipData = await this.downloadZipFile();
-    const csvData = await this.extractCSVFromZIP(zipData);
-    const cotaValue = this.searchCSVForCota(csvData, cnpj, date);
-
-    if (cotaValue === null) {
-      throw new Error("Cota não encontrada para o CNPJ e data especificados.");
+  public async downloadZipFile(data): Promise<Buffer | null> {
+    try {
+      const formattedDate = data.replace(/-/g, "").slice(0, 6); // Remova o dia da data
+      const zipFileURL = `${this.baseURL}inf_diario_fi_${formattedDate}.zip`;
+      const response = await axios.get(zipFileURL, {
+        responseType: "arraybuffer",
+      });
+      return response.data;
+    } catch (err) {
+      return null;
     }
-
-    return cotaValue;
   }
 
-  async downloadZipFile(): Promise<Buffer> {
-    const response = await axios.get(this.zipFileURL, {
-      responseType: "arraybuffer",
-    });
-    return response.data;
-  }
+  public async extractCSVFromZIP(zipData: Buffer): Promise<string | null> {
+    try {
+      const zip = new JSZip();
+      const zipContent = await zip.loadAsync(zipData);
 
-  async extractCSVFromZIP(zipData: Buffer): Promise<string> {
-    const zip = new JSZip();
-    const zipContent = await zip.loadAsync(zipData);
-
-    // Procurar o arquivo CSV no ZIP
-    for (const filename in zipContent.files) {
-      if (filename.endsWith(".csv")) {
-        return zipContent.files[filename].async("text");
+      // Procurar o arquivo CSV no ZIP
+      for (const filename in zipContent.files) {
+        if (filename.endsWith(".csv")) {
+          return zipContent.files[filename].async("text");
+        }
       }
+    } catch (err) {
+      return null;
     }
-
-    throw new Error("Arquivo CSV não encontrado no ZIP.");
   }
 
-  private searchCSVForCota(
-    csvData: string,
-    cnpj: string,
-    date: string
-  ): number | null {
-    console.log("searchCSVForCota", cnpj, date);
+  public searchCSVForCota(csvData, cnpj, date): number | null {
     const rows = csvData.split("\n");
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i].split(";");
@@ -57,26 +51,31 @@ export class FetchData {
     return null;
   }
 
-  async checkIfCNPJExists(cnpj: string): Promise<boolean> {
-    const zipData = await this.downloadZipFile();
-    const csvData = await this.extractCSVFromZIP(zipData);
-    const cotaValue = this.searchCSVForCNPJ(csvData, cnpj);
-
-    if (cotaValue === null) {
-      throw new Error("CNPJ não encontrado.");
-    }
-
-    return cotaValue;
-  }
-
-  private searchCSVForCNPJ(csvData: string, cnpj: string): boolean | null {
-    const rows = csvData.split("\n");
-    for (let i = 1; i < rows.length; i++) {
-      const row = rows[i].split(";");
-      if (row[1] === cnpj) {
-        return true;
+  public async searchCSVForMostRecentCotaByCNPJ(
+    cnpj: string
+  ): Promise<number | null> {
+    try {
+      const zipData = await this.downloadZipFile(
+        new Date(Date.now()).toISOString()
+      );
+      const csvData = await this.extractCSVFromZIP(zipData);
+      const rows = csvData.split("\n");
+      let mostRecentCota = 0;
+      let mostRecentDate = new Date("1900-01-01");
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i].split(";");
+        if (row[1] === cnpj) {
+          const cota = parseFloat(row[4]);
+          const date = new Date(row[2]);
+          if (date > mostRecentDate) {
+            mostRecentCota = cota;
+            mostRecentDate = date;
+          }
+        }
       }
+      return mostRecentCota;
+    } catch (err) {
+      return null;
     }
-    return null;
   }
 }
