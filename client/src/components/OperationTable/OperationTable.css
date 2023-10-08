@@ -1,0 +1,10 @@
+.action-button {
+    margin: 0 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    opacity: 0.5;
+}
+
+.action-button:hover {
+    opacity: 1;
+}

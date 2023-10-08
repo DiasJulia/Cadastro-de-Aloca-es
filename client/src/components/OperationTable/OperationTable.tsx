@@ -7,6 +7,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { Delete, Edit } from "@mui/icons-material";
+import "./OperationTable.css";
 
 import axios from "axios";
 
@@ -102,8 +104,16 @@ function OperationTable() {
               <TableCell align="right">{row.valor}</TableCell>
               <TableCell align="right">{row.quantidade}</TableCell>
               <TableCell align="right">
-                <button onClick={editOperation(row.id)}>Editar</button>
-                <button onClick={deleteOperation(row.id)}>Excluir</button>
+                <Edit
+                  color="action"
+                  className="action-button"
+                  onClick={editOperation(row.id)}
+                />
+                <Delete
+                  color="action"
+                  className="action-button"
+                  onClick={deleteOperation(row.id)}
+                />
               </TableCell>
             </TableRow>
           ))}
