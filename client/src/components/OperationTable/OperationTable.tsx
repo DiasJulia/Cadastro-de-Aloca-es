@@ -69,7 +69,7 @@ function OperationTable() {
       .delete(`http://localhost:3001/api/operacao/${id}`)
       .then((response) => {
         console.log(response.data);
-        setData(response.data);
+        setData(data.filter((row) => row.id !== id));
       });
   };
 
