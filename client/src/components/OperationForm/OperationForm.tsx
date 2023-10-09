@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -14,18 +14,18 @@ import { FormHelperText } from "@mui/material";
 
 function OperationForm(props: any) {
   const { modalOpen, closeModal } = props;
+  let { currentData } = props;
 
   const [step, setStep] = useState(1);
 
   const [tipo, setTipo] = useState<string | null>("");
   const [cnpj, setCnpj] = useState<string | null>("");
   const [razaoSocial, setRazaoSocial] = useState<string | null>("");
-  const [quantidade, setQuantidade] = useState<Number | null>();
-  const [valorUnitario, setValorUnitario] = useState<Number | null>();
+  const [quantidade, setQuantidade] = useState<Number | null>(null);
+  const [valorUnitario, setValorUnitario] = useState<Number | null>(null);
   const [date, setDate] = useState<string | null>(
     new Date(Date.now()).toISOString().split("T")[0]
   );
-  const [inputValue, setInputValue] = useState("" as string);
 
   const [receivedCNPJ, setReceivedCNPJ] = useState<string | null>("");
   const [receivedDate, setReceivedDate] = useState<string | null>("" as string);
@@ -35,31 +35,45 @@ function OperationForm(props: any) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTipo(event.target.value);
   };
+
   const submitForm = () => {
     const data = {
       tipo: tipo,
       CNPJ: cnpj,
       razao_social: razaoSocial,
-      data: new Date(date ? date : Date.now()),
+      data: new Date(date ? date + "T00:00" : Date.now()),
       quantidade: quantidade,
       valor: valorUnitario,
     };
-    console.log(data);
-    axios
-      .post("http://localhost:3001/api/operacao", data)
-      .then((response) => {
-        console.log(response);
-        closeModal();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (currentData) {
+      axios
+        .put(`http://localhost:3001/api/operacao/${currentData.id}`, data)
+        .then((response) => {
+          console.log(response);
+          closeModal();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      return;
+    } else {
+      axios
+        .post("http://localhost:3001/api/operacao", data)
+        .then((response) => {
+          console.log(response);
+          closeModal();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const handleNextStep = () => {
+    console.log(currentData);
     if (step === 1) {
       if (razaoSocial && cnpj && date) {
-        if (receivedCNPJ === cnpj && receivedDate === date) {
+        if ((receivedCNPJ === cnpj && receivedDate === date) || currentData) {
           setStep(2);
           return;
         } else {
@@ -72,8 +86,10 @@ function OperationForm(props: any) {
               setReceivedDate(date);
               setReceivedValue(response.data.valor);
               setValorUnitario(response.data.valor);
-              setInputValue(response.data.valor.toString().replace(".", ","));
               setStep(2);
+            })
+            .catch((error) => {
+              console.log(error);
             });
         }
       }
@@ -84,13 +100,31 @@ function OperationForm(props: any) {
     }
   };
 
+  useEffect(() => {
+    if (currentData) {
+      setTipo(currentData.tipo);
+      setCnpj(currentData.CNPJ);
+      setRazaoSocial(currentData.razao_social);
+      setQuantidade(currentData.quantidade);
+      setValorUnitario(currentData.valor);
+      setDate(new Date(currentData.data).toISOString().split("T")[0]);
+    } else {
+      setTipo("");
+      setCnpj("");
+      setRazaoSocial("");
+      setQuantidade(null);
+      setValorUnitario(null);
+      setDate(new Date(Date.now()).toISOString().split("T")[0]);
+    }
+  }, [currentData]);
+
   return (
     <Modal className="form-modal" open={modalOpen} onClose={closeModal}>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(submitForm)}>
           <FormControl className="register-form">
             <FormLabel className="form-title">
-              <h3>Adicionar Operação</h3>
+              <h3>{currentData ? "Editar" : "Adicionar"} Operação</h3>
             </FormLabel>
             <br />
             {step === 1 && (
@@ -195,17 +229,16 @@ function OperationForm(props: any) {
                   decimalScale={2}
                   placeholder="R$ 0,00"
                   label="Valor Unitário"
-                  value={`R$ ${inputValue}`}
+                  value={`R$ ${valorUnitario?.toString().replace(".", ",")}`}
                   onValueChange={(values) => {
                     const { formattedValue, value } = values;
-                    setInputValue(formattedValue);
                     setValorUnitario(parseFloat(value));
                   }}
                 />
                 <br />
                 <div className="button-container">
                   <Button variant="contained" color="primary" type="submit">
-                    Adicionar
+                    {currentData ? "Editar" : "Adicionar"}
                   </Button>
                   <Button
                     variant="outlined"
@@ -229,4 +262,5 @@ export default OperationForm;
 OperationForm.propTypes = {
   modalOpen: PropTypes.bool,
   closeModal: PropTypes.func,
+  currentData: PropTypes.object || null,
 };
