@@ -132,7 +132,9 @@ function OperationTable() {
                   {new Date(row.data).toLocaleDateString()}
                 </TableCell>
                 <TableCell align="right">{row.tipo}</TableCell>
-                <TableCell align="right">{row.valor}</TableCell>
+                <TableCell align="right">
+                  {row.valor.toFixed(2).replace(".", ",")}
+                </TableCell>
                 <TableCell align="right">{row.quantidade}</TableCell>
                 <TableCell align="right">
                   <Edit

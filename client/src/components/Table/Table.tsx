@@ -77,19 +77,32 @@ function TableComponent() {
                 {row.CNPJ}
               </TableCell>
               <TableCell align="right">{row.razao_social}</TableCell>
-              <TableCell align="right">{"05/10/23"}</TableCell>
-              <TableCell align="right">{row.valor_unitario_atual}</TableCell>
+              <TableCell align="right">
+                {new Date().toLocaleDateString()}
+              </TableCell>
+              <TableCell align="right">
+                {row.valor_unitario_atual.toFixed(2).replace(".", ",")}
+              </TableCell>
               <TableCell align="right">{row.quantidade_total}</TableCell>
               <TableCell align="right">
-                {row.preco_total / row.quantidade_total}
+                {(row.preco_total / row.quantidade_total)
+                  .toFixed(2)
+                  .replace(".", ",")}
               </TableCell>
               <TableCell align="right">
-                {row.valor_unitario_atual /
-                  (row.preco_total / row.quantidade_total) -
-                  1}
+                {(
+                  100 *
+                  (row.valor_unitario_atual /
+                    (row.preco_total / row.quantidade_total) -
+                    1)
+                )
+                  .toFixed(2)
+                  .replace(".", ",") + "%"}
               </TableCell>
               <TableCell align="right">
-                {row.quantidade_total * row.valor_unitario_atual}
+                {(row.quantidade_total * row.valor_unitario_atual)
+                  .toFixed(2)
+                  .replace(".", ",")}
               </TableCell>
             </TableRow>
           ))}
