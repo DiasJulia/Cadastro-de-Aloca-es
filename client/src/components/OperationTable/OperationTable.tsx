@@ -46,18 +46,22 @@ function createData(
 function OperationTable() {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentData, setCurrentData] = useState<Data | null>(null);
+  const [data, setData] = useState<Data[]>([]);
 
-  const [data, setData] = useState<Data[]>([
-    createData(
-      1,
-      "11.511.517/0001-61",
-      "Empresa 1",
-      "2023-10-03T00:00:00.000Z",
-      "COMPRA",
-      1,
-      1.04
-    ),
-  ]);
+  const [dataInicio, setDataInicio] = useState<string>("");
+  const [dataFim, setDataFim] = useState<string>("");
+
+  const filterData = () => {
+    const filteredData = data.filter((row) => {
+      const data = new Date(row.data);
+      if (!dataInicio || !dataFim) return true;
+      const dataInicioDate = new Date(dataInicio ? dataInicio : Date.now());
+      const dataFimDate = new Date(dataFim ? dataFim : Date.now());
+      return data >= dataInicioDate && data <= dataFimDate;
+    });
+    console.log(filteredData);
+    setData(filteredData);
+  };
 
   useEffect(() => {
     axios.get("http://localhost:3001/api/operacao").then((response) => {
@@ -86,6 +90,21 @@ function OperationTable() {
 
   return (
     <>
+      <div>
+        <label>Data de início:</label>
+        <input
+          type="date"
+          value={dataInicio}
+          onChange={(e) => setDataInicio(e.target.value)}
+        />
+        <label>Data de término:</label>
+        <input
+          type="date"
+          value={dataFim}
+          onChange={(e) => setDataFim(e.target.value)}
+        />
+        <button onClick={filterData}>Filtrar</button>
+      </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
