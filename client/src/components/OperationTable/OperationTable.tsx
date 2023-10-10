@@ -7,11 +7,17 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
 import { Delete, Edit } from "@mui/icons-material";
 import "./OperationTable.css";
 
 import axios from "axios";
 import { OperationForm } from "..";
+import Button from "@mui/material/Button";
+import { Snackbar } from "@mui/material";
 
 interface Data {
   id: number;
@@ -51,6 +57,10 @@ function OperationTable() {
   const [dataInicio, setDataInicio] = useState<string>("");
   const [dataFim, setDataFim] = useState<string>("");
 
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [currentId, setCurrentId] = useState<number | null>(null);
+
   const filterData = () => {
     const filteredData = data.filter((row) => {
       const data = new Date(row.data);
@@ -83,9 +93,19 @@ function OperationTable() {
     axios
       .delete(`http://localhost:3001/api/operacao/${id}`)
       .then((response) => {
-        console.log(response.data);
         setData(data.filter((row) => row.id !== id));
+        handleCloseDialog();
+        setOpenSnackbar(true);
       });
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleOpenDialog = (id: number) => () => {
+    setCurrentId(id);
+    setOpenDialog(true);
   };
 
   return (
@@ -145,7 +165,7 @@ function OperationTable() {
                   <Delete
                     color="action"
                     className="action-button"
-                    onClick={deleteOperation(row.id)}
+                    onClick={handleOpenDialog(row.id)}
                   />
                 </TableCell>
               </TableRow>
@@ -157,6 +177,32 @@ function OperationTable() {
         modalOpen={modalOpen}
         closeModal={() => setModalOpen(false)}
         currentData={currentData}
+      />
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Você tem certeza que deseja apagar essa operação?
+            <br />
+            Essa ação não pode ser desfeita.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancelar</Button>
+          <Button onClick={deleteOperation(currentId!)} autoFocus color="error">
+            Apagar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+        message="Operação apagada com sucesso"
       />
     </>
   );

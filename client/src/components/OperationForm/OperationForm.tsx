@@ -10,13 +10,15 @@ import "./OperationForm.css";
 import axios from "axios";
 import CurrencyFormat from "react-currency-format";
 import { FormProvider, set, useForm } from "react-hook-form";
-import { FormHelperText } from "@mui/material";
+import { FormHelperText, Snackbar } from "@mui/material";
 
 function OperationForm(props: any) {
   const { modalOpen, closeModal } = props;
   let { currentData } = props;
 
   const [step, setStep] = useState(1);
+  const [openSnack, setOpenSnack] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
 
   const [tipo, setTipo] = useState<string | null>("");
   const [cnpj, setCnpj] = useState<string | null>("");
@@ -51,10 +53,13 @@ function OperationForm(props: any) {
         .then((response) => {
           console.log(response);
           closeModal();
+          handleOpenSnackbar("Operação editada com sucesso!");
         })
         .catch((error) => {
           console.log(error);
+          handleOpenSnackbar("Erro ao editar operação!");
         });
+
       return;
     } else {
       axios
@@ -62,9 +67,11 @@ function OperationForm(props: any) {
         .then((response) => {
           console.log(response);
           closeModal();
+          handleOpenSnackbar("Operação adicionada com sucesso!");
         })
         .catch((error) => {
           console.log(error);
+          handleOpenSnackbar("Erro ao adicionar operação!");
         });
     }
   };
@@ -100,6 +107,22 @@ function OperationForm(props: any) {
     }
   };
 
+  const handleOpenSnackbar = (message: string) => {
+    setSnackMessage(message);
+    setOpenSnack(true);
+  };
+
+  const handleCloseSnackbar = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
+
   useEffect(() => {
     if (currentData) {
       setTipo(currentData.tipo);
@@ -119,141 +142,153 @@ function OperationForm(props: any) {
   }, [currentData]);
 
   return (
-    <Modal className="form-modal" open={modalOpen} onClose={closeModal}>
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(submitForm)}>
-          <FormControl className="register-form">
-            <FormLabel className="form-title">
-              <h3>{currentData ? "Editar" : "Adicionar"} Operação</h3>
-            </FormLabel>
-            <br />
-            {step === 1 && (
-              <>
-                <TextField
-                  required
-                  error={cnpj === null ? true : false}
-                  id="input-cnpj"
-                  label="CNPJ"
-                  variant="outlined"
-                  value={cnpj}
-                  onChange={(e) => setCnpj(e.target.value || null)}
-                ></TextField>
-                <br />
-                <TextField
-                  required
-                  error={razaoSocial === null ? true : false}
-                  id="input-razao-social"
-                  label="Razão Social"
-                  variant="outlined"
-                  value={razaoSocial}
-                  onChange={(e) => setRazaoSocial(e.target.value || null)}
-                ></TextField>
-                <br />
-                <TextField
-                  required
-                  error={
-                    date === null || new Date(date) > new Date(Date.now())
-                      ? true
-                      : false
-                  }
-                  type="date"
-                  InputProps={{
-                    inputProps: {
-                      min: "2020-05-01",
-                      max: new Date(Date.now()).toISOString().split("T")[0],
-                    },
-                  }}
-                  id="input-data"
-                  label="Data"
-                  variant="outlined"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value || null)}
-                ></TextField>
-                <FormHelperText error={true}>
-                  {date === null || new Date(date) > new Date(Date.now())
-                    ? "Data inválida"
-                    : ""}
-                </FormHelperText>
-                <br />
-                <div className="button-container">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNextStep}
-                  >
-                    Próximo
-                  </Button>
-                  <Button variant="outlined" color="error" onClick={closeModal}>
-                    Cancelar
-                  </Button>
-                </div>
-              </>
-            )}
-            {step === 2 && (
-              <>
-                <TextField
-                  required
-                  select
-                  error={tipo === null ? true : false}
-                  id="input-tipo"
-                  value={tipo}
-                  onChange={handleChange}
-                  label="Tipo"
-                  variant="outlined"
-                >
-                  <MenuItem value="COMPRA">Compra</MenuItem>
-                  <MenuItem value="VENDA">Venda</MenuItem>
-                </TextField>
-                <br />
-                <TextField
-                  required
-                  error={quantidade === null ? true : false}
-                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                  id="input-quantidade"
-                  label="Quantidade"
-                  variant="outlined"
-                  value={quantidade}
-                  onChange={(e) =>
-                    setQuantidade(parseInt(e.target.value) || null)
-                  }
-                ></TextField>
-                <br />
-                <CurrencyFormat
-                  required
-                  error={valorUnitario === null ? true : false}
-                  customInput={TextField}
-                  thousandSeparator="."
-                  decimalSeparator=","
-                  fixedDecimalScale={true}
-                  prefix="R$"
-                  decimalScale={2}
-                  placeholder="R$ 0,00"
-                  label="Valor Unitário"
-                  value={`R$ ${valorUnitario?.toString().replace(".", ",")}`}
-                  onValueChange={(values) => {
-                    const { formattedValue, value } = values;
-                    setValorUnitario(parseFloat(value));
-                  }}
-                />
-                <br />
-                <div className="button-container">
-                  <Button variant="contained" color="primary" type="submit">
-                    {currentData ? "Editar" : "Adicionar"}
-                  </Button>
-                  <Button
+    <>
+      <Modal className="form-modal" open={modalOpen} onClose={closeModal}>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(submitForm)}>
+            <FormControl className="register-form">
+              <FormLabel className="form-title">
+                <h3>{currentData ? "Editar" : "Adicionar"} Operação</h3>
+              </FormLabel>
+              <br />
+              {step === 1 && (
+                <>
+                  <TextField
+                    required
+                    error={cnpj === null ? true : false}
+                    id="input-cnpj"
+                    label="CNPJ"
                     variant="outlined"
-                    color="error"
-                    onClick={handleNextStep}
+                    value={cnpj}
+                    onChange={(e) => setCnpj(e.target.value || null)}
+                  ></TextField>
+                  <br />
+                  <TextField
+                    required
+                    error={razaoSocial === null ? true : false}
+                    id="input-razao-social"
+                    label="Razão Social"
+                    variant="outlined"
+                    value={razaoSocial}
+                    onChange={(e) => setRazaoSocial(e.target.value || null)}
+                  ></TextField>
+                  <br />
+                  <TextField
+                    required
+                    error={
+                      date === null || new Date(date) > new Date(Date.now())
+                        ? true
+                        : false
+                    }
+                    type="date"
+                    InputProps={{
+                      inputProps: {
+                        min: "2020-05-01",
+                        max: new Date(Date.now()).toISOString().split("T")[0],
+                      },
+                    }}
+                    id="input-data"
+                    label="Data"
+                    variant="outlined"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value || null)}
+                  ></TextField>
+                  <FormHelperText error={true}>
+                    {date === null || new Date(date) > new Date(Date.now())
+                      ? "Data inválida"
+                      : ""}
+                  </FormHelperText>
+                  <br />
+                  <div className="button-container">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleNextStep}
+                    >
+                      Próximo
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={closeModal}
+                    >
+                      Cancelar
+                    </Button>
+                  </div>
+                </>
+              )}
+              {step === 2 && (
+                <>
+                  <TextField
+                    required
+                    select
+                    error={tipo === null ? true : false}
+                    id="input-tipo"
+                    value={tipo}
+                    onChange={handleChange}
+                    label="Tipo"
+                    variant="outlined"
                   >
-                    Voltar
-                  </Button>
-                </div>
-              </>
-            )}
-          </FormControl>
-        </form>
-      </FormProvider>
-    </Modal>
+                    <MenuItem value="COMPRA">Compra</MenuItem>
+                    <MenuItem value="VENDA">Venda</MenuItem>
+                  </TextField>
+                  <br />
+                  <TextField
+                    required
+                    error={quantidade === null ? true : false}
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                    id="input-quantidade"
+                    label="Quantidade"
+                    variant="outlined"
+                    value={quantidade}
+                    onChange={(e) =>
+                      setQuantidade(parseInt(e.target.value) || null)
+                    }
+                  ></TextField>
+                  <br />
+                  <CurrencyFormat
+                    required
+                    error={valorUnitario === null ? true : false}
+                    customInput={TextField}
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    fixedDecimalScale={true}
+                    prefix="R$"
+                    decimalScale={2}
+                    placeholder="R$ 0,00"
+                    label="Valor Unitário"
+                    value={`R$ ${valorUnitario?.toString().replace(".", ",")}`}
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setValorUnitario(parseFloat(value));
+                    }}
+                  />
+                  <br />
+                  <div className="button-container">
+                    <Button variant="contained" color="primary" type="submit">
+                      {currentData ? "Editar" : "Adicionar"}
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={handleNextStep}
+                    >
+                      Voltar
+                    </Button>
+                  </div>
+                </>
+              )}
+            </FormControl>
+          </form>
+        </FormProvider>
+      </Modal>
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackMessage}
+      />
+    </>
   );
 }
 
