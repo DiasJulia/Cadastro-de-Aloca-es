@@ -18,26 +18,8 @@ interface Data {
   valor_unitario_atual: number;
 }
 
-function createData(
-  CNPJ: string,
-  razao_social: string,
-  quantidade_total: number,
-  preco_total: number,
-  valor_unitario_atual: number
-) {
-  return {
-    CNPJ,
-    razao_social,
-    quantidade_total,
-    preco_total,
-    valor_unitario_atual,
-  };
-}
-
 function TableComponent() {
-  const [data, setData] = useState<Data[]>([
-    createData("11.511.517/0001-61", "Empresa 1", 1, 1, 1.03),
-  ]);
+  const [data, setData] = useState<Data[]>([]);
 
   useEffect(() => {
     axios.get("http://localhost:3001/api/operacao/grouped").then((response) => {
@@ -54,60 +36,64 @@ function TableComponent() {
 
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>CNPJ</TableCell>
-            <TableCell align="right">Razão Social</TableCell>
-            <TableCell align="right">Data da Consulta</TableCell>
-            <TableCell align="right">Valor unitário da cota</TableCell>
-            <TableCell align="right">Número de cotas</TableCell>
-            <TableCell align="right">Preço médio</TableCell>
-            <TableCell align="right">Retorno da operação</TableCell>
-            <TableCell align="right">Saldo de aplicação no fundo</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((row) => (
-            <TableRow
-              key={row.CNPJ}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.CNPJ}
-              </TableCell>
-              <TableCell align="right">{row.razao_social}</TableCell>
-              <TableCell align="right">
-                {new Date().toLocaleDateString()}
-              </TableCell>
-              <TableCell align="right">
-                {row.valor_unitario_atual.toFixed(2).replace(".", ",")}
-              </TableCell>
-              <TableCell align="right">{row.quantidade_total}</TableCell>
-              <TableCell align="right">
-                {(row.preco_total / row.quantidade_total)
-                  .toFixed(2)
-                  .replace(".", ",")}
-              </TableCell>
-              <TableCell align="right">
-                {(
-                  100 *
-                  (row.valor_unitario_atual /
-                    (row.preco_total / row.quantidade_total) -
-                    1)
-                )
-                  .toFixed(2)
-                  .replace(".", ",") + "%"}
-              </TableCell>
-              <TableCell align="right">
-                {(row.quantidade_total * row.valor_unitario_atual)
-                  .toFixed(2)
-                  .replace(".", ",")}
-              </TableCell>
+      {data.length === 0 ? (
+        <p>Não há dados para mostrar</p>
+      ) : (
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>CNPJ</TableCell>
+              <TableCell align="right">Razão Social</TableCell>
+              <TableCell align="right">Data da Consulta</TableCell>
+              <TableCell align="right">Valor unitário da cota</TableCell>
+              <TableCell align="right">Número de cotas</TableCell>
+              <TableCell align="right">Preço médio</TableCell>
+              <TableCell align="right">Retorno da operação</TableCell>
+              <TableCell align="right">Saldo de aplicação no fundo</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {data.map((row) => (
+              <TableRow
+                key={row.CNPJ}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.CNPJ}
+                </TableCell>
+                <TableCell align="right">{row.razao_social}</TableCell>
+                <TableCell align="right">
+                  {new Date().toLocaleDateString()}
+                </TableCell>
+                <TableCell align="right">
+                  {row.valor_unitario_atual.toFixed(2).replace(".", ",")}
+                </TableCell>
+                <TableCell align="right">{row.quantidade_total}</TableCell>
+                <TableCell align="right">
+                  {(row.preco_total / row.quantidade_total)
+                    .toFixed(2)
+                    .replace(".", ",")}
+                </TableCell>
+                <TableCell align="right">
+                  {(
+                    100 *
+                    (row.valor_unitario_atual /
+                      (row.preco_total / row.quantidade_total) -
+                      1)
+                  )
+                    .toFixed(2)
+                    .replace(".", ",") + "%"}
+                </TableCell>
+                <TableCell align="right">
+                  {(row.quantidade_total * row.valor_unitario_atual)
+                    .toFixed(2)
+                    .replace(".", ",")}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </TableContainer>
   );
 }

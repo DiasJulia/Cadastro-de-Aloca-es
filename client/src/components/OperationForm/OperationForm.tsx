@@ -54,6 +54,7 @@ function OperationForm(props: any) {
           console.log(response);
           closeModal();
           handleOpenSnackbar("Operação editada com sucesso!");
+          window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -68,6 +69,7 @@ function OperationForm(props: any) {
           console.log(response);
           closeModal();
           handleOpenSnackbar("Operação adicionada com sucesso!");
+          window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -160,7 +162,7 @@ function OperationForm(props: any) {
                     label="CNPJ"
                     variant="outlined"
                     value={cnpj}
-                    onChange={(e) => setCnpj(e.target.value || null)}
+                    onChange={(e: any) => setCnpj(e.target.value || null)}
                   ></TextField>
                   <br />
                   <TextField
@@ -170,7 +172,9 @@ function OperationForm(props: any) {
                     label="Razão Social"
                     variant="outlined"
                     value={razaoSocial}
-                    onChange={(e) => setRazaoSocial(e.target.value || null)}
+                    onChange={(e: any) =>
+                      setRazaoSocial(e.target.value || null)
+                    }
                   ></TextField>
                   <br />
                   <TextField
@@ -191,7 +195,7 @@ function OperationForm(props: any) {
                     label="Data"
                     variant="outlined"
                     value={date}
-                    onChange={(e) => setDate(e.target.value || null)}
+                    onChange={(e: any) => setDate(e.target.value || null)}
                   ></TextField>
                   <FormHelperText error={true}>
                     {date === null || new Date(date) > new Date(Date.now())
@@ -241,7 +245,7 @@ function OperationForm(props: any) {
                     label="Quantidade"
                     variant="outlined"
                     value={quantidade}
-                    onChange={(e) =>
+                    onChange={(e: any) =>
                       setQuantidade(parseInt(e.target.value) || null)
                     }
                   ></TextField>

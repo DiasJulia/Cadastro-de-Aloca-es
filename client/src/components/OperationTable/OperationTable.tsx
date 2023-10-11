@@ -136,7 +136,7 @@ function OperationTable() {
             label="Data de Início"
             variant="outlined"
             value={dataInicio}
-            onChange={(e) => setDataInicio(e.target.value || null)}
+            onChange={(e: any) => setDataInicio(e.target.value || null)}
           ></TextField>
           <TextField
             className="m-1"
@@ -152,7 +152,7 @@ function OperationTable() {
             label="Data de Fim"
             variant="outlined"
             value={dataFim}
-            onChange={(e) => setDataFim(e.target.value || null)}
+            onChange={(e: any) => setDataFim(e.target.value || null)}
           ></TextField>
           <div className="d-flex">
             <Button onClick={clearFilter} variant="outlined" color="error">
@@ -231,11 +231,7 @@ function OperationTable() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancelar</Button>
-            <Button
-              onClick={deleteOperation(currentId!)}
-              autoFocus
-              color="error"
-            >
+            <Button onClick={deleteOperation(currentId!)} color="error">
               Apagar
             </Button>
           </DialogActions>

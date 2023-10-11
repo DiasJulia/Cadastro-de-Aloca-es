@@ -10,6 +10,7 @@ nav {
     padding: 0 calc((100vw - 1300px) / 2);
     position: fixed;
     top: 0;
+    left: 0;
     z-index: 10;
 }
 
