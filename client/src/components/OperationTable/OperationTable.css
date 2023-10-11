@@ -8,3 +8,35 @@
 .action-button:hover {
     opacity: 1;
 }
+
+.filter-card {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    margin: 0 10px;
+    min-width: 256px;
+}
+
+.filter-card .m-1 {
+    margin-bottom: 15px;
+}
+
+.container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.d-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.d-flex button {
+    width: 48%;
+}
