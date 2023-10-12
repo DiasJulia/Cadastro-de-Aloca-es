@@ -5,6 +5,7 @@ import { AppDataSource } from "./data-source";
 import express = require("express");
 import cors from "cors";
 import operacaoRouter from "./routes/OperacaoRoutes";
+import fundoRouter from "./routes/FundoRoutes";
 import apiRouter from "./routes/ApiRoutes";
 
 import swaggerDocument from "./docs";
@@ -30,6 +31,8 @@ app.get("/api/ping", (req: Request, res: Response) => {
 });
 
 app.use("/api/operacao", operacaoRouter);
+
+app.use("/api/fundo", fundoRouter);
 
 app.use("/api/consultaCVM", apiRouter);
 
