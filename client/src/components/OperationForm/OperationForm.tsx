@@ -97,6 +97,10 @@ function OperationForm(props: any) {
             })
             .catch((error) => {
               console.log(error);
+              handleOpenSnackbar(
+                "Não foi possível encontrar o valor da cota neste dia! \n Por favor, insira manualmente ciente de que dados incorretos podem gerar inconsistências."
+              );
+              setStep(2);
             });
         }
       }
