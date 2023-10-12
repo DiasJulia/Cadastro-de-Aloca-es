@@ -51,6 +51,29 @@ export class FetchData {
     return null;
   }
 
+  public searchCSVForNearestCota(csvData, cnpj, date): number | null {
+    const rows = csvData.split("\n");
+    let shortestDateDifference = Number.MAX_SAFE_INTEGER;
+    let nearestCota = -1;
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i].split(";");
+      if (
+        row[1] === cnpj &&
+        Math.abs(new Date(row[2]).valueOf() - new Date(date).valueOf()) <
+          shortestDateDifference
+      ) {
+        shortestDateDifference = Math.abs(
+          new Date(row[2]).valueOf() - new Date(date).valueOf()
+        );
+        nearestCota = parseFloat(row[4]);
+      }
+    }
+    if (nearestCota > -1) {
+      return nearestCota;
+    }
+    return null;
+  }
+
   public async searchCSVForMostRecentCotaByCNPJ(
     cnpj: string
   ): Promise<number | null> {
