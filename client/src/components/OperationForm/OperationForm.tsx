@@ -87,9 +87,7 @@ function OperationForm(props: any) {
           return;
         } else {
           axios
-            .get(
-              `http://localhost:3001/api/consultaCVM?cnpj=${cnpj}&data=${date}`
-            )
+            .get(`http://localhost:3001/api/fundo?cnpj=${cnpj}&data=${date}`)
             .then((response) => {
               setReceivedCNPJ(cnpj);
               setReceivedDate(date);
