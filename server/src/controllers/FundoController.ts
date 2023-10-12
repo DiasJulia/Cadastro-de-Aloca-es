@@ -139,8 +139,20 @@ class FundoController {
         );
         if (!cotaValue) {
           res.status(404).json({
-            message: "Cota não encontrada para o CNPJ e data especificados. A",
+            message:
+              "Valor da cota não encontrada para o CNPJ e data especificados.",
           });
+          const rows = csvData.split("\n");
+          for (let i = 1; i < rows.length; i++) {
+            const row = rows[i].split(";");
+            if (row[1] === cnpj) {
+              const fundo = new Fundo();
+              fundo.CNPJ = cnpj;
+              fundo.data = new Date(row[2]);
+              fundo.valor = parseFloat(row[4]);
+              await this.conection.manager.save(fundo);
+            }
+          }
           return;
         }
         res.status(200).json({ valor: cotaValue });
