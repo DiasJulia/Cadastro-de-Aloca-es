@@ -7,6 +7,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import CircularProgress from "@mui/material/CircularProgress";
+
+import "./Table.css";
 
 import axios from "axios";
 
@@ -20,24 +23,33 @@ interface Data {
 
 function TableComponent() {
   const [data, setData] = useState<Data[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/api/operacao/grouped").then((response) => {
-      console.log(response.data);
-      var aux: Data[] = [];
-      for (var CNPJ in response.data) {
-        console.log(CNPJ);
-        console.log(response.data[CNPJ]);
-        aux.push(response.data[CNPJ]);
-      }
-      setData(aux);
-    });
+    axios
+      .get("http://localhost:3001/api/operacao/grouped")
+      .then((response) => {
+        console.log(response.data);
+        var aux: Data[] = [];
+        for (var CNPJ in response.data) {
+          console.log(CNPJ);
+          console.log(response.data[CNPJ]);
+          aux.push(response.data[CNPJ]);
+        }
+        setData(aux);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   return (
     <TableContainer component={Paper}>
-      {data.length === 0 ? (
-        <p>Não há dados para mostrar</p>
+      {isLoading ? (
+        <div className="progress-container">
+          <CircularProgress />
+        </div>
       ) : (
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
