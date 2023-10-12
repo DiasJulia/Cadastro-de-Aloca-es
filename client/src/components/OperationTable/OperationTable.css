@@ -40,3 +40,11 @@
 .d-flex button {
     width: 48%;
 }
+
+.progress-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 20vh;
+    width: 100%;
+}
