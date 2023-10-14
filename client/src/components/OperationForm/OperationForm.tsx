@@ -53,8 +53,9 @@ function OperationForm(props: any) {
         .then((response) => {
           console.log(response);
           closeModal();
+          const currentURL = window.location.href.split("?")[0];
+          window.location.replace(currentURL);
           handleOpenSnackbar("Operação editada com sucesso!");
-          window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -67,9 +68,9 @@ function OperationForm(props: any) {
         .post("http://localhost:3001/api/operacao", data)
         .then((response) => {
           console.log(response);
-          closeModal();
+          const currentURL = window.location.href.split("?")[0];
+          window.location.replace(currentURL);
           handleOpenSnackbar("Operação adicionada com sucesso!");
-          window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -159,6 +160,7 @@ function OperationForm(props: any) {
                 <>
                   <TextField
                     required
+                    name="cnpj"
                     error={cnpj === null ? true : false}
                     id="input-cnpj"
                     label="CNPJ"
@@ -169,6 +171,7 @@ function OperationForm(props: any) {
                   <br />
                   <TextField
                     required
+                    name="razao-social"
                     error={razaoSocial === null ? true : false}
                     id="input-razao-social"
                     label="Razão Social"
@@ -181,6 +184,7 @@ function OperationForm(props: any) {
                   <br />
                   <TextField
                     required
+                    name="data"
                     error={
                       date === null || new Date(date) > new Date(Date.now())
                         ? true
@@ -207,6 +211,7 @@ function OperationForm(props: any) {
                   <br />
                   <div className="button-container">
                     <Button
+                      id="next-button"
                       variant="contained"
                       color="primary"
                       onClick={handleNextStep}
@@ -227,6 +232,7 @@ function OperationForm(props: any) {
                 <>
                   <TextField
                     required
+                    name="tipo"
                     select
                     error={tipo === null ? true : false}
                     id="input-tipo"
@@ -241,6 +247,7 @@ function OperationForm(props: any) {
                   <br />
                   <TextField
                     required
+                    name="quantidade"
                     error={quantidade === null ? true : false}
                     inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                     id="input-quantidade"
@@ -254,6 +261,7 @@ function OperationForm(props: any) {
                   <br />
                   <CurrencyFormat
                     required
+                    name="valor"
                     error={valorUnitario === null ? true : false}
                     customInput={TextField}
                     thousandSeparator="."
