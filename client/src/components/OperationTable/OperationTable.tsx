@@ -43,6 +43,7 @@ function OperationTable() {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [currentId, setCurrentId] = useState<number | null>(null);
 
   const filterData = () => {
@@ -58,12 +59,19 @@ function OperationTable() {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:3001/api/operacao").then((response) => {
-      console.log(response.data);
-      setData(response.data);
-      setCurrentDataFilter(response.data);
-      setIsLoading(false);
-    });
+    axios
+      .get("http://localhost:3001/api/operacao")
+      .then((response) => {
+        console.log(response.data);
+        setData(response.data);
+        setCurrentDataFilter(response.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setOpenSnackbar(true);
+        setSnackbarMessage("Erro ao carregar operações. Tente novamente.");
+      });
   }, []);
 
   const editOperation = (id: number) => () => {
@@ -82,6 +90,13 @@ function OperationTable() {
         setData(data.filter((row) => row.id !== id));
         setCurrentDataFilter(data);
         handleCloseDialog();
+        setSnackbarMessage("Operação apagada com sucesso.");
+        setOpenSnackbar(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        handleCloseDialog();
+        setSnackbarMessage("Erro ao apagar operação. Tente novamente.");
         setOpenSnackbar(true);
       });
   };
@@ -230,7 +245,7 @@ function OperationTable() {
           open={openSnackbar}
           autoHideDuration={6000}
           onClose={() => setOpenSnackbar(false)}
-          message="Operação apagada com sucesso"
+          message={snackbarMessage}
         />
       </div>
     </>

@@ -16,7 +16,7 @@ function ButtonComponent(props: any) {
         color="primary"
         onClick={clickFunction}
       >
-        <PostAddIcon FontSize="large" />
+        <PostAddIcon fontSize="large" />
       </Button>
     </div>
   );
