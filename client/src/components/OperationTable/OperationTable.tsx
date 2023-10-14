@@ -88,7 +88,7 @@ function OperationTable() {
       .delete(`http://localhost:3001/api/operacao/${id}`)
       .then((response) => {
         setData(data.filter((row) => row.id !== id));
-        setCurrentDataFilter(data);
+        setCurrentDataFilter(currentDataFilter.filter((row) => row.id !== id));
         handleCloseDialog();
         setSnackbarMessage("Operação apagada com sucesso.");
         setOpenSnackbar(true);
