@@ -43,8 +43,9 @@ describe("Operation", () => {
     cy.get('[data-value="COMPRA"]').click();
     cy.get('button[type="submit"]').click();
     cy.get("tbody tr").should("have.length.greaterThan", 0);
-    // cy.get("tbody tr").first().should("contain", "00.017.024/0001-53");
-    // cy.get("tbody tr").first().should("contain", "Fundo de Investimento");
+    cy.get("tbody tr").first().should("contain", "00.017.024/0001-53");
+    cy.get("tbody tr").first().should("contain", "Fundo de Investimento");
+    cy.get("tbody tr").first().should("contain", "2");
     cy.contains("Operação editada com sucesso!").should("be.visible");
   });
 
