@@ -19,6 +19,7 @@ import axios from "axios";
 import { OperationForm } from "..";
 import Button from "@mui/material/Button";
 import { Card, Snackbar, TablePagination, TextField } from "@mui/material";
+import { useRouter } from "next/router";
 
 interface Data {
   id: number;
@@ -31,9 +32,9 @@ interface Data {
 }
 
 function OperationTable() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
-  const [modalOpen, setModalOpen] = useState(false);
   const [currentData, setCurrentData] = useState<Data | null>(null);
   const [data, setData] = useState<Data[]>([]);
   const [currentDataFilter, setCurrentDataFilter] = useState<Data[]>([]);
@@ -82,7 +83,7 @@ function OperationTable() {
     if (operation) {
       setCurrentData(operation);
       console.log(operation);
-      setModalOpen(true);
+      router.push(`/operations?modalOpen=true`);
     }
   };
 
@@ -128,6 +129,10 @@ function OperationTable() {
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const closeModal = () => {
+    router.push("/operations");
   };
 
   return (
@@ -248,8 +253,9 @@ function OperationTable() {
           )}
         </TableContainer>
         <OperationForm
-          modalOpen={modalOpen}
-          closeModal={() => setModalOpen(false)}
+          modalOpen={router.query.modalOpen === "true"}
+          closeModal={closeModal}
+          setData={setCurrentDataFilter}
           currentData={currentData}
         />
         <Dialog

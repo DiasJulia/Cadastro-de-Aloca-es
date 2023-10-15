@@ -13,7 +13,7 @@ import { FormProvider, set, useForm } from "react-hook-form";
 import { FormHelperText, Snackbar } from "@mui/material";
 
 function OperationForm(props: any) {
-  const { modalOpen, closeModal } = props;
+  const { modalOpen, closeModal, setData } = props;
   let { currentData } = props;
 
   const [step, setStep] = useState(1);
@@ -57,6 +57,7 @@ function OperationForm(props: any) {
         })
         .catch((error) => {
           console.log(error);
+          closeModal();
           handleOpenSnackbar("Erro ao editar operação!");
         });
 
@@ -66,10 +67,13 @@ function OperationForm(props: any) {
         .post("http://localhost:3001/api/operacao", data)
         .then((response) => {
           console.log(response);
+          setData((prevData: any) => [response.data, ...prevData]);
+          closeModal();
           handleOpenSnackbar("Operação adicionada com sucesso!");
         })
         .catch((error) => {
           console.log(error);
+          closeModal();
           handleOpenSnackbar("Erro ao adicionar operação!");
         });
     }
@@ -308,4 +312,5 @@ OperationForm.propTypes = {
   modalOpen: PropTypes.bool,
   closeModal: PropTypes.func,
   currentData: PropTypes.object || null,
+  setData: PropTypes.func || null,
 };
