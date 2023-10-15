@@ -53,6 +53,14 @@ function OperationForm(props: any) {
         .then((response) => {
           console.log(response);
           closeModal();
+          setData((prevData: any) => {
+            const newData = [...prevData];
+            const index = newData.findIndex(
+              (data: any) => data.id === currentData.id
+            );
+            newData[index] = response.data;
+            return newData;
+          });
           handleOpenSnackbar("Operação editada com sucesso!");
         })
         .catch((error) => {
