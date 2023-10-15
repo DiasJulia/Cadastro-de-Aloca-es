@@ -15,8 +15,14 @@ describe("Operation", () => {
     cy.get("div#input-tipo").click();
     cy.get('[data-value="COMPRA"]').click();
     cy.get('button[type="submit"]').click();
-    // cy.get("tbody tr").should("have.length.greaterThan", 0);
-    // cy.get("tbody tr").first().should("contain", "00.017.024/0001-53");
+    cy.get("tbody tr").should("have.length.greaterThan", 0);
+    cy.get("tbody tr").first().should("contain", "00.017.024/0001-53");
+    cy.get("tbody tr")
+      .first()
+      .should("contain", "Fundo de Investimento em Ações");
+    cy.get("tbody tr").first().should("contain", "30,19");
+    cy.get("tbody tr").first().should("contain", "1");
+    cy.get("tbody tr").first().should("contain", "COMPRA");
     cy.contains("Operação adicionada com sucesso!").should("be.visible");
   });
 
