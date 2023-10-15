@@ -18,7 +18,7 @@ import "./OperationTable.css";
 import axios from "axios";
 import { OperationForm } from "..";
 import Button from "@mui/material/Button";
-import { Card, Snackbar, TextField } from "@mui/material";
+import { Card, Snackbar, TablePagination, TextField } from "@mui/material";
 
 interface Data {
   id: number;
@@ -45,6 +45,9 @@ function OperationTable() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [currentId, setCurrentId] = useState<number | null>(null);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const filterData = () => {
     const filteredData = data.filter((row) => {
@@ -116,6 +119,17 @@ function OperationTable() {
     setCurrentDataFilter(data);
   };
 
+  const handleChangePage = (event: any, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <>
       <div className="container">
@@ -168,52 +182,67 @@ function OperationTable() {
               <CircularProgress />
             </div>
           ) : (
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>CNPJ</TableCell>
-                  <TableCell align="right">Razão Social</TableCell>
-                  <TableCell align="right">Data da Operação</TableCell>
-                  <TableCell align="right">Tipo</TableCell>
-                  <TableCell align="right">Preço</TableCell>
-                  <TableCell align="right">Número de cotas</TableCell>
-                  <TableCell align="right">Ações</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {currentDataFilter.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {row.CNPJ}
-                    </TableCell>
-                    <TableCell align="right">{row.razao_social}</TableCell>
-                    <TableCell align="right">
-                      {new Date(row.data).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell align="right">{row.tipo}</TableCell>
-                    <TableCell align="right">
-                      {row.valor.toFixed(2).replace(".", ",")}
-                    </TableCell>
-                    <TableCell align="right">{row.quantidade}</TableCell>
-                    <TableCell align="right">
-                      <Edit
-                        color="action"
-                        className="action-button"
-                        onClick={editOperation(row.id)}
-                      />
-                      <Delete
-                        color="action"
-                        className="action-button"
-                        onClick={handleOpenDialog(row.id)}
-                      />
-                    </TableCell>
+            <>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>CNPJ</TableCell>
+                    <TableCell align="right">Razão Social</TableCell>
+                    <TableCell align="right">Data da Operação</TableCell>
+                    <TableCell align="right">Tipo</TableCell>
+                    <TableCell align="right">Preço</TableCell>
+                    <TableCell align="right">Número de cotas</TableCell>
+                    <TableCell align="right">Ações</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHead>
+                <TableBody>
+                  {currentDataFilter
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => (
+                      <TableRow
+                        key={row.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {row.CNPJ}
+                        </TableCell>
+                        <TableCell align="right">{row.razao_social}</TableCell>
+                        <TableCell align="right">
+                          {new Date(row.data).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell align="right">{row.tipo}</TableCell>
+                        <TableCell align="right">
+                          {row.valor.toFixed(2).replace(".", ",")}
+                        </TableCell>
+                        <TableCell align="right">{row.quantidade}</TableCell>
+                        <TableCell align="right">
+                          <Edit
+                            color="action"
+                            className="action-button"
+                            onClick={editOperation(row.id)}
+                          />
+                          <Delete
+                            color="action"
+                            className="action-button"
+                            onClick={handleOpenDialog(row.id)}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+              <TablePagination
+                rowsPerPageOptions={[15]}
+                component="div"
+                count={currentDataFilter.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </>
           )}
         </TableContainer>
         <OperationForm
