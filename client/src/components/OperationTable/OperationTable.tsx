@@ -219,11 +219,13 @@ function OperationTable() {
                         <TableCell align="right">{row.quantidade}</TableCell>
                         <TableCell align="right">
                           <Edit
+                            id="edit-button"
                             color="action"
                             className="action-button"
                             onClick={editOperation(row.id)}
                           />
                           <Delete
+                            id="delete-button"
                             color="action"
                             className="action-button"
                             onClick={handleOpenDialog(row.id)}
@@ -265,7 +267,11 @@ function OperationTable() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancelar</Button>
-            <Button onClick={deleteOperation(currentId!)} color="error">
+            <Button
+              id="confirm-delete"
+              onClick={deleteOperation(currentId!)}
+              color="error"
+            >
               Apagar
             </Button>
           </DialogActions>

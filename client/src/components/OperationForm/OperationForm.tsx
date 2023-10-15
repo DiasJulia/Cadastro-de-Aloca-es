@@ -53,8 +53,6 @@ function OperationForm(props: any) {
         .then((response) => {
           console.log(response);
           closeModal();
-          const currentURL = window.location.href.split("?")[0];
-          window.location.replace(currentURL);
           handleOpenSnackbar("Operação editada com sucesso!");
         })
         .catch((error) => {
@@ -68,8 +66,6 @@ function OperationForm(props: any) {
         .post("http://localhost:3001/api/operacao", data)
         .then((response) => {
           console.log(response);
-          const currentURL = window.location.href.split("?")[0];
-          window.location.replace(currentURL);
           handleOpenSnackbar("Operação adicionada com sucesso!");
         })
         .catch((error) => {
