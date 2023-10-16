@@ -72,10 +72,10 @@ class OperacaoController {
         return acc;
       }, {});
       for (const cnpj in operacoesGrouped) {
-        const mostRecentCota = await fetchData.searchCSVForMostRecentCotaByCNPJ(
-          cnpj
-        );
+        const { mostRecentCota, mostRecentDate } =
+          await fetchData.searchCSVForMostRecentCotaByCNPJ(cnpj);
         operacoesGrouped[cnpj].valor_unitario_atual = mostRecentCota;
+        operacoesGrouped[cnpj].data_consulta = mostRecentDate;
       }
       res.json(operacoesGrouped);
     } catch (error) {

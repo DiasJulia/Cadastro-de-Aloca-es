@@ -8,6 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
+import TimelineIcon from "@mui/icons-material/Timeline";
 
 import "./Table.css";
 
@@ -19,6 +20,7 @@ interface Data {
   quantidade_total: number;
   preco_total: number;
   valor_unitario_atual: number;
+  data_consulta: string;
 }
 
 function TableComponent() {
@@ -62,6 +64,7 @@ function TableComponent() {
               <TableCell align="right">Preço médio</TableCell>
               <TableCell align="right">Retorno da operação</TableCell>
               <TableCell align="right">Saldo de aplicação no fundo</TableCell>
+              <TableCell align="right">Histórico</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -69,19 +72,23 @@ function TableComponent() {
               <TableRow
                 key={row.CNPJ}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                onClick={() => {
-                  window.location.href = "/history?cnpj=" + row.CNPJ;
-                }}
               >
                 <TableCell component="th" scope="row">
                   {row.CNPJ}
                 </TableCell>
                 <TableCell align="right">{row.razao_social}</TableCell>
                 <TableCell align="right">
-                  {new Date().toLocaleDateString()}
+                  {row.data_consulta === "1900-01-01"
+                    ? "-"
+                    : new Date(
+                        row.data_consulta + "T00:00:00"
+                      ).toLocaleDateString()}
                 </TableCell>
                 <TableCell align="right">
-                  R${row.valor_unitario_atual.toFixed(2).replace(".", ",")}
+                  {row.valor_unitario_atual >= 0
+                    ? "R$" +
+                      row.valor_unitario_atual.toFixed(2).replace(".", ",")
+                    : "-"}
                 </TableCell>
                 <TableCell align="right">{row.quantidade_total}</TableCell>
                 <TableCell align="right">
@@ -91,20 +98,32 @@ function TableComponent() {
                     .replace(".", ",")}
                 </TableCell>
                 <TableCell align="right">
-                  {(
-                    100 *
-                    (row.valor_unitario_atual /
-                      (row.preco_total / row.quantidade_total) -
-                      1)
-                  )
-                    .toFixed(2)
-                    .replace(".", ",") + "%"}
+                  {row.valor_unitario_atual === -1
+                    ? "0,00%"
+                    : (
+                        100 *
+                        (row.valor_unitario_atual /
+                          (row.preco_total / row.quantidade_total) -
+                          1)
+                      )
+                        .toFixed(2)
+                        .replace(".", ",") + "%"}
                 </TableCell>
                 <TableCell align="right">
                   R$
-                  {(row.quantidade_total * row.valor_unitario_atual)
+                  {(
+                    row.quantidade_total *
+                    (row.valor_unitario_atual >= 0
+                      ? row.valor_unitario_atual
+                      : row.preco_total / row.quantidade_total)
+                  )
                     .toFixed(2)
                     .replace(".", ",")}
+                </TableCell>
+                <TableCell align="center">
+                  <a href={"/history?cnpj=" + row.CNPJ}>
+                    <TimelineIcon />
+                  </a>
                 </TableCell>
               </TableRow>
             ))}

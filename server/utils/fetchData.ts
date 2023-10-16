@@ -76,27 +76,27 @@ export class FetchData {
 
   public async searchCSVForMostRecentCotaByCNPJ(
     cnpj: string
-  ): Promise<number | null> {
+  ): Promise<{ mostRecentCota: number; mostRecentDate: string } | null> {
     try {
       const zipData = await this.downloadZipFile(
         new Date(Date.now()).toISOString()
       );
       const csvData = await this.extractCSVFromZIP(zipData);
       const rows = csvData.split("\n");
-      let mostRecentCota = 0;
-      let mostRecentDate = new Date("1900-01-01");
+      let mostRecentCota = -1;
+      let mostRecentDate = "1900-01-01";
       for (let i = 1; i < rows.length; i++) {
         const row = rows[i].split(";");
         if (row[1] === cnpj) {
           const cota = parseFloat(row[4]);
-          const date = new Date(row[2]);
-          if (date > mostRecentDate) {
+          const date = row[2];
+          if (new Date(date) > new Date(mostRecentDate)) {
             mostRecentCota = cota;
             mostRecentDate = date;
           }
         }
       }
-      return mostRecentCota;
+      return { mostRecentCota, mostRecentDate };
     } catch (err) {
       return null;
     }
