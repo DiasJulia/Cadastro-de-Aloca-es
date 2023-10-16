@@ -111,20 +111,20 @@ function OperationLineChart(props: any) {
 
     svg
       .append("g")
-      .attr("transform", `translate(${20}, ${dimensions.width / 2 + 20})`)
+      .attr("transform", `translate(${30}, ${dimensions.width / 2 + 15})`)
       .call(d3.axisBottom(xScale))
       .selectAll("text")
       .style("text-anchor", "center");
 
     svg
       .append("g")
-      .attr("transform", `translate(${20}, ${20})`)
+      .attr("transform", `translate(${30}, ${15})`)
       .call(d3.axisLeft(yScale));
 
     const line = d3
       .line<PreparedData>()
-      .x((d) => xScale(new Date(d.data))! + 20)
-      .y((d) => yScale(d.valor * d.quantidade));
+      .x((d) => xScale(new Date(d.data))! + 30)
+      .y((d) => yScale(d.valor * d.quantidade) + 15);
 
     svg
       .append("path")
@@ -133,17 +133,29 @@ function OperationLineChart(props: any) {
       .attr("stroke", "steelblue")
       .attr("stroke-width", 2)
       .attr("d", line);
+
+    svg
+      .selectAll(".dot")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("class", "dot")
+      .attr("cx", (d) => xScale(new Date(d.data))! + 30)
+      .attr("cy", (d) => yScale(d.valor * d.quantidade) + 15)
+      .attr("r", 5)
+      .attr("fill", "white")
+      .attr("stroke", "steelblue");
   };
 
   useEffect(() => {
     renderLineChart({
-      width: cardRef.current ? cardRef.current.offsetWidth : 0,
+      width: (cardRef.current ? cardRef.current.offsetWidth : 0) - 60,
       height: cardRef.current ? cardRef.current.offsetHeight : 0,
     });
   }, [dimensions, data]);
 
   return (
-    <Card sx={{ p: 3 }}>
+    <Card sx={{ p: 2 }}>
       {isLoading ? (
         <div className="progress-container">
           <CircularProgress />
@@ -152,9 +164,9 @@ function OperationLineChart(props: any) {
         <div ref={cardRef} className="card-container">
           <svg
             ref={svgRef}
-            width={(cardRef.current ? cardRef.current.offsetWidth : 0) + 20}
+            width={(cardRef.current ? cardRef.current.offsetWidth : 0) + 60}
             height={
-              (cardRef.current ? cardRef.current.offsetWidth / 2 : 0) + 40
+              (cardRef.current ? cardRef.current.offsetWidth / 2 : 0) + 60
             }
           ></svg>
         </div>
