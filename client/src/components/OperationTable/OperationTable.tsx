@@ -58,7 +58,6 @@ function OperationTable() {
       const dataFimDate = new Date(dataFim ? dataFim : Date.now());
       return data >= dataInicioDate && data <= dataFimDate;
     });
-    console.log(filteredData);
     setCurrentDataFilter(filteredData);
   };
 
@@ -66,13 +65,11 @@ function OperationTable() {
     axios
       .get("http://localhost:3001/api/operacao")
       .then((response) => {
-        console.log(response.data);
         setData(response.data);
         setCurrentDataFilter(response.data);
         setIsLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         setOpenSnackbar(true);
         setSnackbarMessage("Erro ao carregar operações. Tente novamente.");
       });
@@ -82,7 +79,6 @@ function OperationTable() {
     const operation = data.find((row) => row.id === id);
     if (operation) {
       setCurrentData(operation);
-      console.log(operation);
       router.push(`/operations?modalOpen=true`);
     }
   };
@@ -98,7 +94,6 @@ function OperationTable() {
         setOpenSnackbar(true);
       })
       .catch((err) => {
-        console.log(err);
         handleCloseDialog();
         setSnackbarMessage("Erro ao apagar operação. Tente novamente.");
         setOpenSnackbar(true);

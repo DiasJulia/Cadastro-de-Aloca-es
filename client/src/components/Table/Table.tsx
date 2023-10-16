@@ -31,19 +31,14 @@ function TableComponent() {
     axios
       .get("http://localhost:3001/api/operacao/grouped")
       .then((response) => {
-        console.log(response.data);
         var aux: Data[] = [];
         for (var CNPJ in response.data) {
-          console.log(CNPJ);
-          console.log(response.data[CNPJ]);
           aux.push(response.data[CNPJ]);
         }
         setData(aux);
         setIsLoading(false);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   }, []);
 
   return (

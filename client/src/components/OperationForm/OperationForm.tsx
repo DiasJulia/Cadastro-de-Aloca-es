@@ -51,7 +51,6 @@ function OperationForm(props: any) {
       axios
         .put(`http://localhost:3001/api/operacao/${currentData.id}`, data)
         .then((response) => {
-          console.log(response);
           closeModal();
           setData((prevData: any) => {
             const newData = [...prevData];
@@ -64,7 +63,6 @@ function OperationForm(props: any) {
           handleOpenSnackbar("Operação editada com sucesso!");
         })
         .catch((error) => {
-          console.log(error);
           closeModal();
           handleOpenSnackbar("Erro ao editar operação!");
         });
@@ -74,13 +72,11 @@ function OperationForm(props: any) {
       axios
         .post("http://localhost:3001/api/operacao", data)
         .then((response) => {
-          console.log(response);
           setData((prevData: any) => [response.data, ...prevData]);
           closeModal();
           handleOpenSnackbar("Operação adicionada com sucesso!");
         })
         .catch((error) => {
-          console.log(error);
           closeModal();
           handleOpenSnackbar("Erro ao adicionar operação!");
         });
@@ -88,7 +84,6 @@ function OperationForm(props: any) {
   };
 
   const handleNextStep = () => {
-    console.log(currentData);
     if (step === 1) {
       if (razaoSocial && cnpj && date) {
         if ((receivedCNPJ === cnpj && receivedDate === date) || currentData) {
@@ -105,7 +100,6 @@ function OperationForm(props: any) {
               setStep(2);
             })
             .catch((error) => {
-              console.log(error);
               handleOpenSnackbar(
                 "Não foi possível encontrar o valor da cota neste dia! \n Por favor, insira manualmente ciente de que dados incorretos podem gerar inconsistências."
               );

@@ -30,16 +30,13 @@ function HistoryChart(props: any) {
     axios
       .get("http://localhost:3001/api/operacao")
       .then((response) => {
-        console.log(response.data);
         if (cnpj) {
           setData(response.data.filter((d: Data) => d.CNPJ === cnpj));
         } else {
           setData(response.data);
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }, [cnpj]);
 
   useEffect(() => {
