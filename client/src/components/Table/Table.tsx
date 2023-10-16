@@ -81,10 +81,11 @@ function TableComponent() {
                   {new Date().toLocaleDateString()}
                 </TableCell>
                 <TableCell align="right">
-                  {row.valor_unitario_atual.toFixed(2).replace(".", ",")}
+                  R${row.valor_unitario_atual.toFixed(2).replace(".", ",")}
                 </TableCell>
                 <TableCell align="right">{row.quantidade_total}</TableCell>
                 <TableCell align="right">
+                  R$
                   {(row.preco_total / row.quantidade_total)
                     .toFixed(2)
                     .replace(".", ",")}
@@ -100,6 +101,7 @@ function TableComponent() {
                     .replace(".", ",") + "%"}
                 </TableCell>
                 <TableCell align="right">
+                  R$
                   {(row.quantidade_total * row.valor_unitario_atual)
                     .toFixed(2)
                     .replace(".", ",")}
