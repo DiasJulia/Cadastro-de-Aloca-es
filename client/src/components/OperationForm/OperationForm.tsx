@@ -72,11 +72,12 @@ function OperationForm(props: any) {
       axios
         .post("http://localhost:3001/api/operacao", data)
         .then((response) => {
-          setData((prevData: any) => [response.data, ...prevData]);
+          if (setData) setData((prevData: any) => [response.data, ...prevData]);
           closeModal();
           handleOpenSnackbar("Operação adicionada com sucesso!");
         })
         .catch((error) => {
+          console.log(error);
           closeModal();
           handleOpenSnackbar("Erro ao adicionar operação!");
         });
