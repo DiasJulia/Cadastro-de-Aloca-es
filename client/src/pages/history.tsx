@@ -1,6 +1,7 @@
-import { HistoryChart, Navbar } from "@/components";
+import { Navbar, OperationLineChart } from "@/components";
 import styles from "../app/page.module.css";
 import { useRouter } from "next/router";
+import Container from "@mui/material/Container";
 
 export default function History() {
   const router = useRouter();
@@ -10,10 +11,12 @@ export default function History() {
   return (
     <main className={styles.main}>
       <Navbar />
-      <h1>Histórico de Saldos de Aplicação</h1>
-      {cnpj && <p>no fundo de cnpj: {cnpj}</p>}
-      <br />
-      <HistoryChart cnpj={cnpj as string} />
+      <Container maxWidth="xl">
+        <h1>Histórico de Saldos de Aplicação</h1>
+        {cnpj && <p>no fundo de cnpj: {cnpj}</p>}
+        <br />
+        <OperationLineChart cnpj={cnpj as string} />
+      </Container>
     </main>
   );
 }
