@@ -69,6 +69,9 @@ function TableComponent() {
               <TableRow
                 key={row.CNPJ}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                onClick={() => {
+                  window.location.href = "/history?cnpj=" + row.CNPJ;
+                }}
               >
                 <TableCell component="th" scope="row">
                   {row.CNPJ}

@@ -9,7 +9,7 @@ import MenuItem from "@mui/material/MenuItem";
 import "./OperationForm.css";
 import axios from "axios";
 import CurrencyFormat from "react-currency-format";
-import { FormProvider, set, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { FormHelperText, Snackbar } from "@mui/material";
 
 function OperationForm(props: any) {
