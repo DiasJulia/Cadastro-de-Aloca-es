@@ -76,12 +76,12 @@ function ResponsiveAppBar() {
                   display: { xs: "block", sm: "none" },
                 }}
               >
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Link href="/">Resumo</Link>
-                </MenuItem>
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Link href="/operations">Operações</Link>
-                </MenuItem>
+                <Link href="/">
+                  <MenuItem onClick={handleCloseNavMenu}>Resumo</MenuItem>
+                </Link>
+                <Link href="/operations">
+                  <MenuItem onClick={handleCloseNavMenu}>Operações</MenuItem>
+                </Link>
               </Menu>
             </Box>
             <RequestQuoteIcon
@@ -102,18 +102,22 @@ function ResponsiveAppBar() {
               GesFin
             </Typography>
             <Box sx={{ flexGrow: 0, display: { xs: "none", sm: "flex" } }}>
-              <Button
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                <Link href="/">Resumo</Link>
-              </Button>
-              <Button
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                <Link href="/operations">Operações</Link>
-              </Button>
+              <Link href="/">
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  Resumo
+                </Button>
+              </Link>
+              <Link href="/operations">
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  Operações
+                </Button>
+              </Link>
             </Box>
           </Toolbar>
         </Container>
