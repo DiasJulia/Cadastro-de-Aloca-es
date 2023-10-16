@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import * as d3 from "d3";
+import "d3-time-format/locale/pt-BR";
 
 import "./OperationLineChart.css";
 
@@ -25,6 +26,43 @@ interface PreparedData {
   quantidade: number;
   valor: number;
 }
+
+d3.timeFormatDefaultLocale({
+  dateTime: "%a %b %e %X %Y",
+  date: "%d/%m/%Y",
+  time: "%H:%M:%S",
+  periods: ["AM", "PM"],
+  days: ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"],
+  shortDays: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"],
+  months: [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
+  ],
+  shortMonths: [
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
+  ],
+});
 
 function OperationLineChart(props: any) {
   const { cnpj } = props;
