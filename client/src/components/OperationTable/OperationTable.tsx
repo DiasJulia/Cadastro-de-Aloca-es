@@ -18,7 +18,13 @@ import "./OperationTable.css";
 import axios from "axios";
 import { OperationForm } from "..";
 import Button from "@mui/material/Button";
-import { Card, Snackbar, TablePagination, TextField } from "@mui/material";
+import {
+  Card,
+  Container,
+  Snackbar,
+  TablePagination,
+  TextField,
+} from "@mui/material";
 import { useRouter } from "next/router";
 
 interface Data {
@@ -132,8 +138,15 @@ function OperationTable() {
 
   return (
     <>
-      <div className="container">
-        <Card className="filter-card">
+      <Container
+        maxWidth="xl"
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          alignItems: { xs: "stretch", md: "flex-start" },
+        }}
+      >
+        <Card className="filter-card" sx={{ mr: { xs: 0, md: 2 }, mb: 2 }}>
           <h4 className="m-1">Filtros</h4>
           <TextField
             className="m-1"
@@ -283,7 +296,7 @@ function OperationTable() {
           onClose={() => setOpenSnackbar(false)}
           message={snackbarMessage}
         />
-      </div>
+      </Container>
     </>
   );
 }
