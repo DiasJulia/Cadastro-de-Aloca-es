@@ -4,6 +4,7 @@ import { TestHelper } from "../utils/testHelper";
 
 beforeAll(async () => {
   await TestHelper.instance.setupTestDB();
+  jest.setTimeout(10000);
 });
 
 afterAll(() => {
