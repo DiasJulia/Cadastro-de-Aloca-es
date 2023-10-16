@@ -11,7 +11,7 @@ class FundoController {
     else this.conection = AppDataSource;
 
     this.createFromCSV = this.createFromCSV.bind(this);
-    this.readByCNPJAndDate = this.readByCNPJAndDate.bind(this);
+    this.readByCNPJDate = this.readByCNPJDate.bind(this);
   }
 
   async createFromCSV(req: Request, res: Response) {
@@ -104,13 +104,21 @@ class FundoController {
     }
   }
 
-  async readByCNPJAndDate(req: Request, res: Response) {
+  async readByCNPJDate(req: Request, res: Response) {
     try {
       const { cnpj, data } = req.query;
-      if (!cnpj || !data) {
+      if (!cnpj) {
         res.status(400).json({
-          message: "Parâmetros CNPJ e data são obrigatórios.",
+          message: "Parâmetro CNPJ é obrigatório.",
         });
+        return;
+      }
+      if (!data) {
+        const { cnpj } = req.params;
+        const fundos = await this.conection.manager.find(Fundo, {
+          where: { CNPJ: cnpj },
+        });
+        res.status(200).json(fundos);
         return;
       }
       const fundo = await this.conection.manager.findOne(Fundo, {

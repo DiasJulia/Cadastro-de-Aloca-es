@@ -7,8 +7,6 @@ const fundoController = new FundoController();
 fundoRouter
   .route("/")
   .post(fundoController.createFromCSV)
-  .get(fundoController.readByCNPJAndDate);
-
-fundoRouter.route("/:CNPJ").get(fundoController.readByCNPJ);
+  .get(fundoController.readByCNPJDate);
 
 export default fundoRouter;
