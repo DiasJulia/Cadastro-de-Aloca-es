@@ -12,7 +12,7 @@ export default function Operations() {
   return (
     <main className={styles.main}>
       <Navbar />
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ mb: 0 }}>
         <h1>Listagem de Operações</h1>
         <p>Realizadas em todos os Fundos</p>
         <br />

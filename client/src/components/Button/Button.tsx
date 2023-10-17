@@ -11,6 +11,13 @@ function ButtonComponent(props: any) {
   return (
     <div>
       <Button
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+          borderRadius: 50,
+          zIndex: 5,
+        }}
         className="add-button"
         variant="contained"
         color="primary"

@@ -51,7 +51,7 @@ function OperationForm(props: any) {
       axios
         .put(`http://localhost:3001/api/operacao/${currentData.id}`, data)
         .then((response) => {
-          closeModal();
+          handleCloseModal();
           setData((prevData: any) => {
             const newData = [...prevData];
             const index = newData.findIndex(
@@ -63,7 +63,7 @@ function OperationForm(props: any) {
           handleOpenSnackbar("Operação editada com sucesso!");
         })
         .catch((error) => {
-          closeModal();
+          handleCloseModal();
           handleOpenSnackbar("Erro ao editar operação!");
         });
 
@@ -73,12 +73,12 @@ function OperationForm(props: any) {
         .post("http://localhost:3001/api/operacao", data)
         .then((response) => {
           if (setData) setData((prevData: any) => [response.data, ...prevData]);
-          closeModal();
+          handleCloseModal();
           handleOpenSnackbar("Operação adicionada com sucesso!");
         })
         .catch((error) => {
           console.log(error);
-          closeModal();
+          handleCloseModal();
           handleOpenSnackbar("Erro ao adicionar operação!");
         });
     }
@@ -131,6 +131,18 @@ function OperationForm(props: any) {
     setOpenSnack(false);
   };
 
+  const handleCloseModal = () => {
+    setStep(1);
+    setTipo("");
+    setCnpj("");
+    setRazaoSocial("");
+    setQuantidade(null);
+    setValorUnitario(null);
+    setDate(new Date(Date.now()).toISOString().split("T")[0]);
+
+    closeModal();
+  };
+
   useEffect(() => {
     if (currentData) {
       setTipo(currentData.tipo);
@@ -151,10 +163,15 @@ function OperationForm(props: any) {
 
   return (
     <>
-      <Modal className="form-modal" open={modalOpen} onClose={closeModal}>
+      <Modal
+        className="form-modal"
+        open={modalOpen}
+        onClose={closeModal}
+        sx={{ p: 2 }}
+      >
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(submitForm)}>
-            <FormControl className="register-form">
+            <FormControl className="register-form" sx={{ p: 2 }}>
               <FormLabel className="form-title">
                 <h3>{currentData ? "Editar" : "Adicionar"} Operação</h3>
               </FormLabel>
