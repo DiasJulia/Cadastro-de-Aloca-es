@@ -14,7 +14,7 @@ export default function Operations() {
   };
   return (
     <main className={styles.main}>
-      <p>Link api: {process.env.SERVER_HOST_EXTERNAL}</p>
+      <p>Link api: {process.env.NEXT_PUBLIC_SERVER_HOST_EXTERNAL}</p>
       <Navbar />
       <Container maxWidth="xl">
         <h1>Resumo dos Investimentos</h1>
