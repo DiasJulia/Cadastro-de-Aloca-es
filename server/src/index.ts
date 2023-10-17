@@ -40,6 +40,7 @@ async function startServer() {
     await AppDataSource.initialize(); // Inicializa o banco de dados
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
+      console.log(`Running on ${process.env.SERVER_HOST_INTERNAL}`);
     });
   } catch (error) {
     console.error("Failed to initialize the database:", error);
