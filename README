@@ -98,6 +98,41 @@ Antes de começar, verifique se você possui o Docker e o Docker Compose instala
     npm i
     npm run dev
    ```
+
+## Para executar os testes automatizados:
+A aplicação conta com testes automatizados tanto no server quanto no client, certifique-se de que você possui as dependencias necesárias.
+
+1. Testes do Servidor:
+
+    Os testes do servidor foram configurados utilizando jest, é possível visualizá-los na pasta server/tests/
+
+    Na raíz do projeto, execute:
+
+    ```bash
+    cd ./server/
+    npm i
+    npm run test
+   ```
+
+2. Testes do Cliente:
+
+    Os testes do cliente foram configurados utilizando cypress, foram desenvolvidos testes End to End acerca das funcionalidades principais. É possível excutá-los tanto por meio do terminal quanto por meio da CLI do cypress
+
+    a. Para rodar no terminal, execute:
+        
+    ```bash
+    cd ./client/
+    npm i
+    npm run cypress
+   ```
+
+   a. Para rodar na CLI, execute:
+        
+    ```bash
+    cd ./client/
+    npm i
+    npm run cypress:open
+   ```
    
 ## Status
 Produto final
