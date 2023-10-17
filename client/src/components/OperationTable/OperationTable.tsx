@@ -209,43 +209,56 @@ function OperationTable() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {currentDataFilter
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <TableRow
-                        key={row.id}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.CNPJ}
-                        </TableCell>
-                        <TableCell align="right">{row.razao_social}</TableCell>
-                        <TableCell align="right">
-                          {new Date(row.data).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell align="right">{row.tipo}</TableCell>
-                        <TableCell align="right">
-                          R${row.valor.toFixed(2).replace(".", ",")}
-                        </TableCell>
-                        <TableCell align="right">{row.quantidade}</TableCell>
-                        <TableCell align="right">
-                          <Edit
-                            id="edit-button"
-                            color="action"
-                            className="action-button"
-                            onClick={editOperation(row.id)}
-                          />
-                          <Delete
-                            id="delete-button"
-                            color="action"
-                            className="action-button"
-                            onClick={handleOpenDialog(row.id)}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                  {currentDataFilter.length > 0 ? (
+                    currentDataFilter
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row) => (
+                        <TableRow
+                          key={row.id}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.CNPJ}
+                          </TableCell>
+                          <TableCell align="right">
+                            {row.razao_social}
+                          </TableCell>
+                          <TableCell align="right">
+                            {new Date(row.data).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell align="right">{row.tipo}</TableCell>
+                          <TableCell align="right">
+                            R${row.valor.toFixed(2).replace(".", ",")}
+                          </TableCell>
+                          <TableCell align="right">{row.quantidade}</TableCell>
+                          <TableCell align="right">
+                            <Edit
+                              id="edit-button"
+                              color="action"
+                              className="action-button"
+                              onClick={editOperation(row.id)}
+                            />
+                            <Delete
+                              id="delete-button"
+                              color="action"
+                              className="action-button"
+                              onClick={handleOpenDialog(row.id)}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={7} align="center">
+                        Nenhuma operação encontrada
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
               <TablePagination
