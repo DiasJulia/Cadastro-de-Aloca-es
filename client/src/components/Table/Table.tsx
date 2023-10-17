@@ -30,7 +30,7 @@ function TableComponent() {
   useEffect(() => {
     axios
       .get(
-        (process.env.SERVER_HOST_EXTERNAL || "http://localhost:3001") +
+        "https://z1ba3a963-z9eb75d7a-gtw.z1304890a.xmx.sh" +
           "/api/operacao/grouped"
       )
       .then((response) => {

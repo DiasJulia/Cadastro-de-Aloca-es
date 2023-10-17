@@ -70,8 +70,8 @@ function OperationTable() {
   useEffect(() => {
     axios
       .get(
-        (process.env.SERVER_HOST_INTERNAL || "http://localhost:3001") +
-          "/api/operacao"
+        ("https://z1ba3a963-z9eb75d7a-gtw.z1304890a.xmx.sh" ||
+          "http://localhost:3001") + "/api/operacao"
       )
       .then((response) => {
         setData(response.data);
@@ -95,8 +95,8 @@ function OperationTable() {
   const deleteOperation = (id: number) => () => {
     axios
       .delete(
-        (process.env.SERVER_HOST_INTERNAL || "http://localhost:3001") +
-          `/api/operacao/${id}`
+        ("https://z1ba3a963-z9eb75d7a-gtw.z1304890a.xmx.sh" ||
+          "http://localhost:3001") + `/api/operacao/${id}`
       )
       .then((response) => {
         setData(data.filter((row) => row.id !== id));

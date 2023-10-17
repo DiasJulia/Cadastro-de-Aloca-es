@@ -50,8 +50,8 @@ function OperationForm(props: any) {
     if (currentData) {
       axios
         .put(
-          (process.env.SERVER_HOST_INTERNAL || "http://localhost:3001") +
-            `/api/operacao/${currentData.id}`,
+          ("https://z1ba3a963-z9eb75d7a-gtw.z1304890a.xmx.sh" ||
+            "http://localhost:3001") + `/api/operacao/${currentData.id}`,
           data
         )
         .then((response) => {
@@ -75,8 +75,8 @@ function OperationForm(props: any) {
     } else {
       axios
         .post(
-          (process.env.SERVER_HOST_INTERNAL || "http://localhost:3001") +
-            "/api/operacao",
+          ("https://z1ba3a963-z9eb75d7a-gtw.z1304890a.xmx.sh" ||
+            "http://localhost:3001") + "/api/operacao",
           data
         )
         .then((response) => {
@@ -101,7 +101,8 @@ function OperationForm(props: any) {
         } else {
           axios
             .get(
-              (process.env.SERVER_HOST_INTERNAL || "http://localhost:3001") +
+              ("https://z1ba3a963-z9eb75d7a-gtw.z1304890a.xmx.sh" ||
+                "http://localhost:3001") +
                 `/api/fundo?cnpj=${cnpj}&data=${date}`
             )
             .then((response) => {
