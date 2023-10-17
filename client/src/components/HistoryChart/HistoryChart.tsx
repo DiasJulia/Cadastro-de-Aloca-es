@@ -28,7 +28,10 @@ function HistoryChart(props: any) {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/api/operacao")
+      .get(
+        (process.env.SERVER_HOST_INTERNAL || "http://localhost:3001") +
+          "/api/operacao"
+      )
       .then((response) => {
         if (cnpj) {
           setData(response.data.filter((d: Data) => d.CNPJ === cnpj));

@@ -1,5 +1,7 @@
 # Seleção Reciprev
 
+Acesse o projeto publicado online: [Link para a aplicação](https://p3000-z1ba3a963-z32c5ffa7-gtw.z1304890a.xmx.sh)
+
 # Descrição
 Esse repositório contém um sistema gerenciador de alocações financeiras realizadas em fundos de investimentos disponíveis no site da CVM. Nele, é possível cadastrar operações de compra e venda de cotas em fundos de investimentos, bem como visualizar informações sobre essas alocações, o histórico de operações e dados sobre o saldo atual das aplicações.
 

@@ -29,7 +29,10 @@ function TableComponent() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/api/operacao/grouped")
+      .get(
+        (process.env.SERVER_HOST_INTERNAL || "http://localhost:3001") +
+          "/api/operacao/grouped"
+      )
       .then((response) => {
         var aux: Data[] = [];
         for (var CNPJ in response.data) {

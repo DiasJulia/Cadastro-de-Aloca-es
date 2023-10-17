@@ -49,7 +49,11 @@ function OperationForm(props: any) {
     };
     if (currentData) {
       axios
-        .put(`http://localhost:3001/api/operacao/${currentData.id}`, data)
+        .put(
+          (process.env.SERVER_HOST_INTERNAL || "http://localhost:3001") +
+            `/api/operacao/${currentData.id}`,
+          data
+        )
         .then((response) => {
           handleCloseModal();
           setData((prevData: any) => {
@@ -70,7 +74,11 @@ function OperationForm(props: any) {
       return;
     } else {
       axios
-        .post("http://localhost:3001/api/operacao", data)
+        .post(
+          (process.env.SERVER_HOST_INTERNAL || "http://localhost:3001") +
+            "/api/operacao",
+          data
+        )
         .then((response) => {
           if (setData) setData((prevData: any) => [response.data, ...prevData]);
           handleCloseModal();
@@ -92,7 +100,10 @@ function OperationForm(props: any) {
           return;
         } else {
           axios
-            .get(`http://localhost:3001/api/fundo?cnpj=${cnpj}&data=${date}`)
+            .get(
+              (process.env.SERVER_HOST_INTERNAL || "http://localhost:3001") +
+                `/api/fundo?cnpj=${cnpj}&data=${date}`
+            )
             .then((response) => {
               setReceivedCNPJ(cnpj);
               setReceivedDate(date);
