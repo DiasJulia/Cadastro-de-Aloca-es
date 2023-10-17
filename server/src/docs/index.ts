@@ -12,7 +12,9 @@ export default {
   },
   servers: [
     {
-      url: process.env.SERVER_HOST_EXTERNAL || "http://localhost:3001/api",
+      url:
+        "https://" + process.env.SERVER_HOST_EXTERNAL ||
+        "http://localhost:3001/api",
       description: "Local Server",
     },
   ],
