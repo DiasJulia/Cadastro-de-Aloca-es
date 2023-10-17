@@ -1,3 +1,5 @@
+import fundoPaths from "./routes/fudoPaths";
+import fundoSchemas from "./schemas/fundoSchemas";
 import operacaoPaths from "./routes/operacaoPaths";
 import operacaoSchemas from "./schemas/operacaoSchemas";
 
@@ -16,10 +18,12 @@ export default {
   ],
   paths: {
     ...operacaoPaths,
+    ...fundoPaths,
   },
   components: {
     schemas: {
       operacao: operacaoSchemas,
+      fundo: fundoSchemas,
     },
   },
 };
