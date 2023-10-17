@@ -42,7 +42,7 @@ Antes de começar, verifique se você possui o Docker e o Docker Compose instala
 
     Após iniciar os contêineres, você poderá acessar o aplicativo em um navegador da web: http://localhost:3000 se você estiver executando localmente.
     
-    O servidor pode ser acessado por http://localhost/3001.
+    O servidor pode ser acessado por http://localhost/3001. Observe que é possível visualizar a documentação da API, com as rotas disponíveis no sistema, em http://localhost/3001/docs ( Esse link também fica disponível ao executar o projeto em modo de desenvolvimento ).
     Certifique-se de que todos os contêineres estejam em execução sem erros.
 
 ## Para executar como desenvolvedor:
